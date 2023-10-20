@@ -1,0 +1,92 @@
+.wrapper {
+    display: inline-flex;
+    align-items: center;
+    min-width: 100px;
+    padding: 6px;
+    border-radius: var(--small-radius);
+    font-size: 1.6rem;
+    font-weight: 600;
+    font-family: var(--font-family);
+    cursor: pointer;
+    background-color: var(--white);
+    border: 1px solid transparent;
+    user-select: none;
+    text-decoration: none;
+    color: var(--text-color);
+
+    &.center {
+        justify-content: center;
+    }
+
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+}
+
+.icon + .title,
+.title + .icon {
+    margin-left: 6px;
+}
+
+.icon {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+}
+
+// Button types
+.rounded {
+    border-radius: 999px;
+}
+
+.primary {
+    color: var(--text-color);
+    background-color: var(--primary);
+    border-color: var(--primary);
+
+    &:hover {
+        border-color: var(--primary);
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), #ffb700;
+    }
+}
+
+.inactive {
+    color: var(--grey-text);
+    background-color: transparent;
+    border-color: currentColor;
+
+    &:hover {
+        background-color: #f7f7f7;
+    }
+}
+
+.dark {
+    color: var(--white);
+    background-color: var(--black);
+
+    &:hover {
+        background-color: #313131;
+    }
+}
+
+.outline {
+    color: var(--primary);
+    border-color: currentColor;
+
+    &:hover {
+        border-color: currentColor;
+        background-color: rgba(254, 44, 85, 0.06);
+    }
+}
+
+// Button sizes
+.small {
+    min-width: 68px;
+    padding: 6px 8px;
+}
+
+.large {
+    padding: 10px 16px;
+    min-width: 150px;
+}

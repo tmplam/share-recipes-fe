@@ -1,0 +1,14 @@
+// Customize for babel to understand the path (babel-plugin-module-resolver)
+// Editors autocompletion of babel plugin (babel-plugin-module-resolver) file jsconfig.json
+{
+    "plugins": [
+        [
+            "module-resolver",
+            {
+                "alias": {
+                    "~": "./src"
+                }
+            }
+        ]
+    ]
+}

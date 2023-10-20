@@ -1,0 +1,82 @@
+.wrapper {
+    padding-top: calc(var(--header-height) + 8px);
+}
+
+// INFO
+.brand {
+    display: flex;
+    height: 80px;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--white);
+    text-shadow: 2px 2px 4px #000000;
+    border-radius: var(--small-radius);
+
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.info {
+    display: flex;
+}
+
+.info-item {
+    text-align: center;
+    margin-left: 20px;
+}
+
+.info-item-number {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.info-item-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+// CATEGORY SLIDER
+.category {
+    margin: 12px 0 16px;
+}
+
+.category-list {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.category-item {
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+// FILTER
+.filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-name {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.sort-label {
+    margin-right: 16px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.sort-food {
+    border-radius: var(--small-radius);
+    width: 160px;
+    height: 32px;
+    outline: none;
+    border: none;
+}
