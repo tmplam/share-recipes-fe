@@ -9,25 +9,54 @@
 }
 
 .image-wrapper {
-    width: 72%;
     position: relative;
-    // background-color: #f7ff87;
 }
 
 .image {
-    // position: absolute;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 10 / 8;
     object-fit: cover;
-    border-radius: 50%;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
     display: block;
-    transform: translateY(-30%);
-    box-shadow: 0 6px 6px #a0a0a0;
+    box-shadow: 0 3px 3px #a0a0a0;
+    display: block;
+    margin-bottom: 8px;
 }
 
 .name {
-    font-size: 20px;
+    font-size: 2rem;
     font-weight: 600;
+    max-width: 90%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.favourite-btn {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    cursor: pointer;
+    padding: 0;
+    min-width: 0;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    color: var(--grey-text);
+    font-size: 1.8rem;
+    background-color: #fff;
+    border-radius: 50%;
+    display: inline;
+}
+
+.favourite-btn:hover {
+    color: #d74f4f;
+}
+
+.favourite-btn.active {
+    color: #d74f4f;
 }
 
 .rating {
@@ -42,6 +71,7 @@
 }
 
 .reviews {
+    color: var(--grey-text);
 }
 
 .footer {

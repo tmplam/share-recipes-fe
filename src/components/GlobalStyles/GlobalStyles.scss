@@ -13,8 +13,6 @@
 
     --small-radius: 8px;
     --header-height: 80px;
-    --sidebar-width: 200px;
-    --inner-width: 94%;
 
     --font-family: 'IBM Plex Sans', sans-serif;
 }
@@ -64,4 +62,8 @@ input,
 [tabindex] {
     outline: none;
     border: none;
+}
+
+body {
+    background-color: var(--background-color);
 }

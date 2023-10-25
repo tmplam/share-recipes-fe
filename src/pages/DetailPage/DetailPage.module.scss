@@ -1,0 +1,86 @@
+.wrapper {
+    padding-top: calc(var(--header-height) + 8px);
+}
+
+// DETAIL
+.name {
+    margin: 8px 0;
+}
+
+.desc {
+    display: flex;
+}
+
+.food-img {
+    width: 50%;
+    display: block;
+    margin-right: 12px;
+    border-radius: var(--small-radius);
+}
+
+.desc-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--white);
+    padding: 12px;
+    border-radius: var(--small-radius);
+}
+
+.ingre-wrapper,
+.guid-wrapper {
+    padding: 12px;
+    border-radius: var(--small-radius);
+    background-color: var(--white);
+    margin-top: 12px;
+}
+
+.title {
+    margin: 8px 0;
+}
+
+.title ~ div ul {
+    margin-left: 50px;
+}
+
+// ACTION
+.action {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+}
+
+.save p,
+.rating p {
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+.stars {
+    margin-right: 6px;
+    color: var(--grey-text);
+    font-size: 26px;
+}
+
+// COMMENT
+.input-group {
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.cmt-input {
+    margin-left: 8px;
+    border-radius: 2000px;
+    height: 40px;
+    min-width: 300px;
+    padding: 4px 12px;
+    font-size: 1.6rem;
+}

@@ -1,4 +1,5 @@
 import classNames from 'classnames/bind';
+import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faMagnifyingGlass,
@@ -69,20 +70,28 @@ const userMenu = [
 ];
 
 function Header() {
-    let signedIn = false;
+    const location = useLocation();
+    let signedIn = true;
     let admin = true;
 
     return (
         <header className={cx('wrapper')}>
             <div className={`grid wide`}>
                 <div className={cx('header')}>
-                    <img className={cx('logo')} src={images.logo} alt="logo" />
-                    <div className={cx('search')}>
-                        <input placeholder="Search recipes..." />
-                        <button className={cx('search-btn')}>
-                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                        </button>
-                    </div>
+                    <Link className={cx('logo')} to={'/'}>
+                        <img className={cx('logo')} src={images.logo} alt="logo" />
+                    </Link>
+                    {location.pathname === '/' ? (
+                        <div className={cx('search')}>
+                            <input placeholder="Search recipes..." />
+                            <button className={cx('search-btn')}>
+                                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                            </button>
+                        </div>
+                    ) : (
+                        ''
+                    )}
+
                     <div className={cx('control')}>
                         {signedIn ? (
                             <>
@@ -114,10 +123,10 @@ function Header() {
                             </>
                         ) : (
                             <>
-                                <Button primary center>
+                                <Button primary center ml>
                                     Sign Up
                                 </Button>
-                                <Button primary center>
+                                <Button primary center ml>
                                     Sign In
                                 </Button>
                             </>
