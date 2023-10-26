@@ -1,5 +1,4 @@
 import classNames from 'classnames/bind';
-
 import styles from './HomePage.module.scss';
 import Button from '~/components/Button';
 import FoodItem from '~/components/FoodItem';
