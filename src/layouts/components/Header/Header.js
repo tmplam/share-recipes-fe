@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import { Link, useLocation } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faMagnifyingGlass,
@@ -8,7 +9,6 @@ import {
     faArrowRightFromBracket,
     faListCheck,
 } from '@fortawesome/free-solid-svg-icons';
-
 import {
     faHeart,
     faUser,
@@ -16,6 +16,8 @@ import {
     faBookmark,
     faShareFromSquare,
 } from '@fortawesome/free-regular-svg-icons';
+
+import { Container } from 'react-bootstrap';
 
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -76,11 +78,12 @@ function Header() {
 
     return (
         <header className={cx('wrapper')}>
-            <div className={`grid wide`}>
+            <Container>
                 <div className={cx('header')}>
                     <Link className={cx('logo')} to={'/'}>
                         <img className={cx('logo')} src={images.logo} alt="logo" />
                     </Link>
+                    
                     {location.pathname === '/' ? (
                         <div className={cx('search')}>
                             <input placeholder="Search recipes..." />
@@ -133,7 +136,7 @@ function Header() {
                         )}
                     </div>
                 </div>
-            </div>
+            </Container>
         </header>
     );
 }

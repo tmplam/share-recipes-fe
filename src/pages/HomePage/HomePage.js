@@ -1,4 +1,5 @@
 import classNames from 'classnames/bind';
+import { Container, Row, Col } from 'react-bootstrap';
 
 import styles from './HomePage.module.scss';
 import Button from '~/components/Button';
@@ -68,80 +69,79 @@ const RECIPES_ITEM = [
 
 function HomePage() {
     return (
-        <div className="grid wide">
-            <div className={`${cx('wrapper')}`}>
-                <div
-                    className={cx('brand')}
-                    style={{
-                        backgroundImage: `url(${images.background})`,
-                    }}
-                >
-                    <h1 className={cx('slogan')}>LEARN, COOK & EAT YOUR MEALS</h1>
-                    <div className={cx('info')}>
-                        <div className={cx('info-item')}>
-                            <p className={cx('info-item-number')}>24</p>
-                            <p className={cx('info-item-title')}>Total items</p>
-                        </div>
-                        <div className={cx('info-item')}>
-                            <p className={cx('info-item-number')}>09</p>
-                            <p className={cx('info-item-title')}>Categories</p>
-                        </div>
+        <Container className={`${cx('wrapper')}`}>
+            <div
+                className={cx('brand')}
+                style={{
+                    backgroundImage: `url(${images.background})`,
+                }}
+            >
+                <h1 className={cx('slogan')}>LEARN, COOK & EAT YOUR MEALS</h1>
+                <div className={cx('info')}>
+                    <div className={cx('info-item')}>
+                        <p className={cx('info-item-number')}>24</p>
+                        <p className={cx('info-item-title')}>Total items</p>
                     </div>
-                </div>
-                <div className={cx('category')}>
-                    <ul className={cx('category-list')}>
-                        <li className={cx('category-item')}>
-                            <Button small rounded center dark>
-                                Pizza
-                            </Button>
-                        </li>
-                        <li className={cx('category-item')}>
-                            <Button small inactive rounded center>
-                                Dessert
-                            </Button>
-                        </li>
-                        <li className={cx('category-item')}>
-                            <Button small inactive rounded center>
-                                Noodle
-                            </Button>
-                        </li>
-                        <li className={cx('category-item')}>
-                            <Button small inactive rounded center>
-                                Cocktails
-                            </Button>
-                        </li>
-                        <li className={cx('category-item')}>
-                            <Button small inactive rounded center>
-                                Salad
-                            </Button>
-                        </li>
-                    </ul>
-                </div>
-                <div className={cx('filter')}>
-                    <p className={cx('filter-name')}>ALL RECIPES</p>
-
-                    <div>
-                        <label className={cx('sort-label')} htmlFor="sort-food">
-                            Sort by:
-                        </label>
-
-                        <select className={cx('sort-food')} id="sort-food">
-                            <option value="rating">Rating</option>
-                            <option value="date">Date</option>
-                        </select>
-                    </div>
-                </div>
-                <div className="grid">
-                    <div className={`row`}>
-                        {RECIPES_ITEM.map((recipe, index) => (
-                            <div key={index} className={`col l-2-4 m-4 c-6`}>
-                                <FoodItem {...recipe} />
-                            </div>
-                        ))}
+                    <div className={cx('info-item')}>
+                        <p className={cx('info-item-number')}>09</p>
+                        <p className={cx('info-item-title')}>Categories</p>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div className={cx('category')}>
+                <ul className={cx('category-list')}>
+                    <li className={cx('category-item')}>
+                        <Button small rounded center dark>
+                            Pizza
+                        </Button>
+                    </li>
+                    <li className={cx('category-item')}>
+                        <Button small inactive rounded center>
+                            Dessert
+                        </Button>
+                    </li>
+                    <li className={cx('category-item')}>
+                        <Button small inactive rounded center>
+                            Noodle
+                        </Button>
+                    </li>
+                    <li className={cx('category-item')}>
+                        <Button small inactive rounded center>
+                            Cocktails
+                        </Button>
+                    </li>
+                    <li className={cx('category-item')}>
+                        <Button small inactive rounded center>
+                            Salad
+                        </Button>
+                    </li>
+                </ul>
+            </div>
+            <div className={cx('filter')}>
+                <p className={cx('filter-name')}>ALL RECIPES</p>
+
+                <div>
+                    <label className={cx('sort-label')} htmlFor="sort-food">
+                        Sort by:
+                    </label>
+
+                    <select className={cx('sort-food')} id="sort-food">
+                        <option value="rating">Rating</option>
+                        <option value="date">Date</option>
+                    </select>
+                </div>
+            </div>
+            <Container fluid className="px-0">
+                <Row>
+                    {RECIPES_ITEM.map((recipe, index) => (
+                        <Col xs={6} md={4} lg={3} key={index}>
+                            <FoodItem {...recipe} />
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
+        </Container>
     );
 }
 

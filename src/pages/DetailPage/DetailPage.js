@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import { faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { Container } from 'react-bootstrap';
 
 import styles from './DetailPage.module.scss';
 import Button from '~/components/Button';
@@ -93,7 +94,7 @@ const COMMENTS = [
 
 function DetailPage() {
     return (
-        <div className="grid wide">
+        <Container>
             <div className={cx('wrapper')}>
                 <div className={cx('recipe-info')}>
                     <h1 className={cx('name')}>{RECIPE.name}</h1>
@@ -157,7 +158,7 @@ function DetailPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </Container>
     );
 }
 
