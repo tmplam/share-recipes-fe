@@ -1,4 +1,5 @@
 import classNames from 'classnames/bind';
+
 import { Container, Row, Col } from 'react-bootstrap';
 
 import styles from './HomePage.module.scss';
@@ -132,15 +133,14 @@ function HomePage() {
                     </select>
                 </div>
             </div>
-            <Container fluid className="px-0">
-                <Row>
-                    {RECIPES_ITEM.map((recipe, index) => (
-                        <Col xs={6} md={4} lg={3} key={index}>
-                            <FoodItem {...recipe} />
-                        </Col>
-                    ))}
-                </Row>
-            </Container>
+
+            <Row>
+                {RECIPES_ITEM.map((recipe, index) => (
+                    <Col xs={6} md={4} lg={3} key={index}>
+                        <FoodItem {...recipe} />
+                    </Col>
+                ))}
+            </Row>
         </Container>
     );
 }

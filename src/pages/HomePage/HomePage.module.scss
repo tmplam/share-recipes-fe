@@ -11,11 +11,14 @@
     color: var(--white);
     text-shadow: 2px 2px 4px #000000;
     border-radius: var(--small-radius);
-
     background-origin: content-box;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+}
+
+.slogan {
+    font-weight: 700;
 }
 
 .info {

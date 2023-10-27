@@ -73,7 +73,7 @@ const userMenu = [
 
 function Header() {
     const location = useLocation();
-    let signedIn = true;
+    let signedIn = false;
     let admin = true;
 
     return (
@@ -83,7 +83,7 @@ function Header() {
                     <Link className={cx('logo')} to={'/'}>
                         <img className={cx('logo')} src={images.logo} alt="logo" />
                     </Link>
-                    
+
                     {location.pathname === '/' ? (
                         <div className={cx('search')}>
                             <input placeholder="Search recipes..." />
@@ -126,11 +126,11 @@ function Header() {
                             </>
                         ) : (
                             <>
-                                <Button primary center ml>
-                                    Sign Up
+                                <Button primary center ml to="/signup">
+                                    Đăng Ký
                                 </Button>
-                                <Button primary center ml>
-                                    Sign In
+                                <Button primary center ml to="/login">
+                                    Đăng Nhập
                                 </Button>
                             </>
                         )}

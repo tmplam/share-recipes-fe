@@ -1,6 +1,5 @@
 // normalize css npm
 @import 'normalize.css';
-@import './Grid.scss';
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 @import url('bootstrap/dist/css/bootstrap.min.css');
 
@@ -8,14 +7,17 @@
     --primary: rgb(255, 187, 13);
     --black: #000;
     --white: #fff;
+    --green: #80c125;
     --text-color: #333333;
     --grey-text: #959595;
     --background-color: #eeeeee;
 
     --small-radius: 8px;
+    --medium-radius: 12px;
     --header-height: 80px;
 
-    --font-family: 'IBM Plex Sans', sans-serif;
+    // --font-family: 'IBM Plex Sans', sans-serif;
+    --font-family: cursive;
 }
 
 * {

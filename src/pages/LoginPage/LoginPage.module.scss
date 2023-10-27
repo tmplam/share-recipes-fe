@@ -1,0 +1,142 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper {
+    width: 90%;
+    display: flex;
+    height: calc(100vh - var(--header-height) - 20px);
+    margin-top: calc(var(--header-height) + 10px);
+    margin-bottom: 10px;
+    border-radius: var(--medium-radius);
+    background-color: var(--white);
+}
+
+.image-wrapper {
+    position: relative;
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--medium-radius) 0px 0px var(--medium-radius);
+}
+
+.image {
+    border-radius: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+.slogan {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
+    color: var(--white);
+    font-weight: 500;
+    font-size: 3.2rem;
+    font-style: italic;
+    text-shadow: 2px 2px 4px #e1e1e1;
+    opacity: 0.9;
+}
+
+// FORM
+.form-wrapper {
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 20px 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 0px var(--medium-radius) var(--medium-radius) 0px;
+    background-color: var(--white);
+    overflow-y: auto;
+
+    @media screen and (max-width: 991.5px) {
+        border-radius: var(--medium-radius);
+    }
+}
+
+.form-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.title {
+    font-size: 36px;
+    text-align: center;
+    color: var(--green);
+    margin-bottom: 12px;
+}
+
+.form-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.control-wrapper {
+    position: relative;
+    height: 40px;
+}
+
+.form-control {
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(81, 223, 10, 0.2);
+    outline: none;
+    border-radius: 40px;
+    font-size: 16px;
+    color: #000000;
+    padding: 0 40px 0 20px;
+}
+
+.icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--green);
+    font-size: 2rem;
+}
+
+.error {
+    display: block;
+    color: red;
+    margin-left: 20px;
+}
+
+.register-btn {
+    width: 100%;
+    height: 45px;
+    background-color: var(--green);
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--white);
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+// REDIRECT TO LOGIn
+.signup {
+    font-size: 14.5px;
+    text-align: end;
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.signup-title {
+    margin: 0;
+}
+
+.signup-link {
+    display: block;
+    text-decoration: none;
+    margin-left: 20px;
+    color: #631ccd;
+    font-weight: 600;
+}
