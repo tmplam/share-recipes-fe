@@ -11,6 +11,7 @@
     --text-color: #333333;
     --grey-text: #959595;
     --background-color: #eeeeee;
+    --error: red;
 
     --small-radius: 8px;
     --medium-radius: 12px;
@@ -69,4 +70,8 @@ input,
 
 body {
     background-color: var(--background-color);
+}
+
+input#file-upload-button {
+    color: red !important;
 }

@@ -51,7 +51,7 @@ const userMenu = [
     {
         icon: <FontAwesomeIcon icon={faShareFromSquare} />,
         title: 'Share recipe',
-        to: '/',
+        to: '/recipes/create',
     },
     {
         icon: <FontAwesomeIcon icon={faBookmark} />,
@@ -73,7 +73,7 @@ const userMenu = [
 
 function Header() {
     const location = useLocation();
-    let signedIn = false;
+    let signedIn = true;
     let admin = true;
 
     return (

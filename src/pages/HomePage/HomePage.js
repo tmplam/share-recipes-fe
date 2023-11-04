@@ -3,7 +3,6 @@ import classNames from 'classnames/bind';
 import { Container, Row, Col } from 'react-bootstrap';
 
 import styles from './HomePage.module.scss';
-import Button from '~/components/Button';
 import FoodItem from '~/pages/HomePage/components/FoodItem';
 import images from '~/assets/images';
 
@@ -90,47 +89,32 @@ function HomePage() {
                 </div>
             </div>
 
-            <div className={cx('category')}>
-                <ul className={cx('category-list')}>
-                    <li className={cx('category-item')}>
-                        <Button small rounded center dark>
-                            Pizza
-                        </Button>
-                    </li>
-                    <li className={cx('category-item')}>
-                        <Button small inactive rounded center>
-                            Dessert
-                        </Button>
-                    </li>
-                    <li className={cx('category-item')}>
-                        <Button small inactive rounded center>
-                            Noodle
-                        </Button>
-                    </li>
-                    <li className={cx('category-item')}>
-                        <Button small inactive rounded center>
-                            Cocktails
-                        </Button>
-                    </li>
-                    <li className={cx('category-item')}>
-                        <Button small inactive rounded center>
-                            Salad
-                        </Button>
-                    </li>
-                </ul>
-            </div>
             <div className={cx('filter')}>
                 <p className={cx('filter-name')}>ALL RECIPES</p>
 
-                <div>
-                    <label className={cx('sort-label')} htmlFor="sort-food">
-                        Sort by:
-                    </label>
+                <div className={cx('filter-group')}>
+                    <div className={cx('filter-control')}>
+                        <label className={cx('filter-label')} htmlFor="category">
+                            Loại:
+                        </label>
 
-                    <select className={cx('sort-food')} id="sort-food">
-                        <option value="rating">Rating</option>
-                        <option value="date">Date</option>
-                    </select>
+                        <select className={cx('filter-select')} id="category">
+                            <option value="all">Tất cả</option>
+                            <option value="rating">Món chính</option>
+                            <option value="date">Tráng miệng</option>
+                        </select>
+                    </div>
+
+                    <div className={cx('filter-control')}>
+                        <label className={cx('filter-label')} htmlFor="sort-food">
+                            Sắp xếp:
+                        </label>
+
+                        <select className={cx('filter-select')} id="sort-food">
+                            <option value="rating">Đánh giá</option>
+                            <option value="date">Ngày đăng</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 

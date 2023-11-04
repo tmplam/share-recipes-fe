@@ -40,29 +40,12 @@
     font-weight: 700;
 }
 
-// CATEGORY SLIDER
-.category {
-    margin: 12px 0 16px;
-}
-
-.category-list {
-    display: flex;
-    list-style: none;
-    padding-left: 0;
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-.category-item {
-    flex-shrink: 0;
-    margin-right: 10px;
-}
-
 // FILTER
 .filter {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 20px;
 }
 
 .filter-name {
@@ -70,13 +53,21 @@
     font-size: 20px;
 }
 
-.sort-label {
-    margin-right: 16px;
+.filter-group {
+    display: flex;
+}
+
+.filter-control {
+    margin-left: 12px;
+}
+
+.filter-label {
+    margin-right: 8px;
     font-weight: 700;
     font-size: 16px;
 }
 
-.sort-food {
+.filter-select {
     border-radius: var(--small-radius);
     width: 160px;
     height: 32px;

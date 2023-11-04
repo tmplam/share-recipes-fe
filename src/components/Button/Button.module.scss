@@ -51,6 +51,21 @@
     }
 }
 
+.green {
+    color: var(--white);
+    background-color: var(--green);
+    border-color: var(--green);
+
+    &:hover {
+        border-color: var(--green);
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), var(--green);
+    }
+}
+
+.w100 {
+    width: 100% !important;
+}
+
 .inactive {
     color: var(--grey-text);
     background-color: transparent;

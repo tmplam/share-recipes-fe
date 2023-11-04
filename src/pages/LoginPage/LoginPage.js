@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import styles from './LoginPage.module.scss';
 import images from '~/assets/images';
+import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
@@ -51,9 +52,9 @@ function Login() {
                                     <span className={cx('error')}></span>
                                 </div>
 
-                                <button className={cx('register-btn')} type="submit">
-                                    Đăng Nhập
-                                </button>
+                                <Button type="submit" green center w100 rounded large>
+                                    Đăng ký
+                                </Button>
                             </form>
 
                             <div className={cx('signup')}>
