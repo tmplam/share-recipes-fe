@@ -73,6 +73,19 @@
     position: relative;
     width: 100%;
     margin-bottom: 12px;
+    position: relative;
+}
+
+.error {
+    display: block;
+    text-align: center;
+    margin-top: 4px;
+    color: red;
+    width: 100%;
+}
+
+.error.hide {
+    display: none;
 }
 
 .control-wrapper {
@@ -100,11 +113,6 @@
     font-size: 2rem;
 }
 
-.error {
-    display: block;
-    color: red;
-    margin-left: 20px;
-}
 // REDIRECT TO LOGIn
 .signup {
     font-size: 14.5px;

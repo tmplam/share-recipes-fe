@@ -9,51 +9,105 @@ import images from '~/assets/images';
 import Button from '~/components/Button';
 import { useState, useRef, useEffect } from 'react';
 
+import axios from '~/utils/api';
+
 const cx = classNames.bind(styles);
 
-const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]{3, 23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8, 24}$/;
+const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]{3,23}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 function SignUp() {
-    const userRef = useRef();
-    const errRef = useRef();
-
     const [username, setUsername] = useState('');
-    const [validUsername, setValidUsername] = useState(false);
+    const [validUsername, setValidUsername] = useState(true);
     const [usernameFocus, setUsernameFocus] = useState(false);
+    const userRef = useRef();
 
     const [pwd, setPwd] = useState('');
-    const [validPwd, setValidPwd] = useState(false);
+    const [validPwd, setValidPwd] = useState(true);
     const [pwdFocus, setPwdFocus] = useState(false);
+    const pwdRef = useRef();
 
     const [matchPwd, setMatchPwd] = useState('');
-    const [validMatchPwd, setValidMatchPwd] = useState(false);
+    const [validMatchPwd, setValidMatchPwd] = useState(true);
     const [matchPwdFocus, setMatchPwdFocus] = useState(false);
-
-    const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
+    const matchPwdRef = useRef();
 
     useEffect(() => {
         userRef.current.focus();
     }, []);
 
-    useEffect(() => {
-        const result = USER_REGEX.test(username);
-
+    function handleUsernameChange(e) {
+        setUsername(e.target.value);
+        const result = USER_REGEX.test(e.target.value);
         setValidUsername(result);
-    }, [username]);
+    }
 
-    useEffect(() => {
-        const result = PWD_REGEX.test(pwd);
-
+    function handlePwdChange(e) {
+        setPwd(e.target.value);
+        const result = PWD_REGEX.test(e.target.value);
         setValidPwd(result);
-        const match = pwd === matchPwd;
-        setValidMatchPwd(match);
-    }, [pwd, matchPwd]);
+    }
 
-    useEffect(() => {
-        setErrMsg('');
-    }, [username, pwd, matchPwd]);
+    function handleMatchPwdChange(e) {
+        setMatchPwd(e.target.value);
+        const match = pwd === e.target.value;
+        setValidMatchPwd(match);
+    }
+
+    async function handleSubmitForm(e) {
+        e.preventDefault();
+
+        if (!USER_REGEX.test(username)) {
+            setValidUsername(() => {
+                userRef.current.focus();
+                return false;
+            });
+        } else if (!PWD_REGEX.test(pwd)) {
+            setValidPwd(() => {
+                pwdRef.current.focus();
+                return false;
+            });
+        } else if (pwd !== matchPwd) {
+            setValidMatchPwd(() => {
+                matchPwdRef.current.focus();
+                return false;
+            });
+        } else {
+            try {
+                // HANDLE SIGN UP
+                const response = await axios.post(
+                    '/api/register',
+                    {
+                        email: 'eve.holt@reqres.i',
+                        password: 'pisstol',
+                    },
+                    {
+                        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                    },
+                );
+
+                console.log(response);
+                // console.log(JSON.stringify(response));
+                // setSuccess(true);
+
+                //clear state and controlled inputs
+                //need value attrib on inputs for this
+
+                setUsername('');
+                setPwd('');
+                setMatchPwd('');
+            } catch (err) {
+                console.log(err);
+                if (!err?.response) {
+                    // setErrMsg('No Server Response');
+                } else if (err.response?.status === 409) {
+                    // setErrMsg('Username Taken');
+                } else {
+                    // setErrMsg('Registration Failed');
+                }
+            }
+        }
+    }
 
     return (
         <Container className={`${cx('container')}`}>
@@ -69,7 +123,7 @@ function SignUp() {
                     </Col>
                     <Col lg={6} className="h-100">
                         <div className={cx('form-wrapper')}>
-                            <form className={cx('form')}>
+                            <form className={cx('form')} onSubmit={handleSubmitForm}>
                                 <h1 className={cx('title')}>Đăng Ký</h1>
                                 <div
                                     className={cx(
@@ -82,7 +136,7 @@ function SignUp() {
                                         <input
                                             ref={userRef}
                                             value={username}
-                                            onChange={(e) => setUsername(e.target.value.trim())}
+                                            onChange={handleUsernameChange}
                                             onFocus={(e) => setUsernameFocus(true)}
                                             onBlur={(e) => setUsernameFocus(false)}
                                             className={cx('form-control')}
@@ -108,8 +162,9 @@ function SignUp() {
                                 >
                                     <div className={cx('control-wrapper')}>
                                         <input
+                                            ref={pwdRef}
                                             value={pwd}
-                                            onChange={(e) => setUsername(e.target.value.trim())}
+                                            onChange={handlePwdChange}
                                             onFocus={(e) => setPwdFocus(true)}
                                             onBlur={(e) => setPwdFocus(false)}
                                             className={cx('form-control')}
@@ -140,8 +195,9 @@ function SignUp() {
                                 >
                                     <div className={cx('control-wrapper')}>
                                         <input
+                                            ref={matchPwdRef}
                                             value={matchPwd}
-                                            onChange={(e) => setMatchPwd(e.target.value.trim())}
+                                            onChange={handleMatchPwdChange}
                                             onFocus={(e) => setMatchPwdFocus(true)}
                                             onBlur={(e) => setMatchPwdFocus(false)}
                                             className={cx('form-control')}

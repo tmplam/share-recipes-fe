@@ -106,6 +106,7 @@ function AddRecipePage() {
                                     <label htmlFor="name">Tên công thức</label>
                                     <input
                                         id="name"
+                                        autoComplete="false"
                                         value={namehValue}
                                         onChange={(e) => setNameValue(e.target.value)}
                                         className={cx('form-control')}
@@ -179,6 +180,7 @@ function AddRecipePage() {
                                     <label htmlFor="time">Thời gian nấu (phút)</label>
                                     <input
                                         id="time"
+                                        autoComplete="false"
                                         value={timeValue}
                                         onChange={(e) => setTimeValue(e.target.value)}
                                         className={cx('form-control')}

@@ -90,7 +90,7 @@
 
 .form-group.invalid.focus .error {
     display: block;
-    background-color: var(--black);
+    background-color: rgba(0, 0, 0, 0.8);
     margin-top: 4px;
     color: var(--white);
     padding: 12px;
