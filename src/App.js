@@ -7,6 +7,10 @@ import DetailPage from './pages/DetailPage';
 import Login from './pages/LoginPage';
 import SignUp from './pages/SignUpPage';
 import CreateRecipePage from './pages/CreateRecipePage';
+import UnauthorizedPage from './pages/UnauthorizedPage';
+
+import RequireAuth from './components/RequireAuth';
+import Logout from './components/Logout';
 
 const router = createBrowserRouter([
     {
@@ -18,8 +22,15 @@ const router = createBrowserRouter([
             {
                 path: 'recipes',
                 children: [
-                    { path: ':recipeId', element: <DetailPage /> },
-                    { path: 'create', element: <CreateRecipePage /> },
+                    {
+                        path: ':recipeId',
+                        element: <DetailPage />,
+                    },
+                    {
+                        path: '',
+                        element: <RequireAuth allowedRoles={['User', 'Admin', 'SuperAdmin']} />,
+                        children: [{ path: 'create', element: <CreateRecipePage /> }],
+                    },
                 ],
             },
             {
@@ -29,6 +40,14 @@ const router = createBrowserRouter([
             {
                 path: 'signup',
                 element: <SignUp />,
+            },
+            {
+                path: 'logout',
+                element: <Logout />,
+            },
+            {
+                path: 'unauthorized',
+                element: <UnauthorizedPage />,
             },
         ],
     },

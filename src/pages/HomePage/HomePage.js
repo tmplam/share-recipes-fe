@@ -1,73 +1,68 @@
 import classNames from 'classnames/bind';
-
-import { Container, Row, Col } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 
 import styles from './HomePage.module.scss';
 import FoodItem from '~/pages/HomePage/components/FoodItem';
 import images from '~/assets/images';
+import axios from '~/utils/api';
 
 const cx = classNames.bind(styles);
 
-const RECIPES_ITEM = [
-    {
-        image: 'https://th.bing.com/th/id/R.783ecca519ae0a9e6828595c7682a6bb?rik=6YgYbtr%2bOavtoQ&pid=ImgRaw&r=0',
-        name: 'Hamburgur',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-    {
-        image: 'https://th.bing.com/th/id/OIP.9hy9vmaBnEr2ufyaXsP1UQHaHa?pid=ImgDet&w=500&h=500&rs=1',
-        name: 'Noodle',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-    {
-        image: 'https://th.bing.com/th/id/R.09fc02f79025c0ab41021878d475e6eb?rik=v%2fH1ZQGvBCGLng&riu=http%3a%2f%2ffoodology.ca%2fwp-content%2fuploads%2f2019%2f04%2fstarbucks-summer-frappuccino-1-620x930.jpg&ehk=X0PYJDlXsGpJdBxu1KUJ0xOo743Dwt6JLe8PFHRiwXY%3d&risl=&pid=ImgRaw&r=0',
-        name: 'Matcha',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-    {
-        image: 'https://th.bing.com/th/id/R.b78eeff1d8318e10b5b856987b87128c?rik=5a1xRA5Ps0YXXA&riu=http%3a%2f%2ffoodisafourletterword.com%2fwp-content%2fuploads%2f2020%2f11%2fVietnamese_Chicken_Banh_Mi_Recipe_Banh_Mi_Ga_Roti_new2.jpg&ehk=57vR67zsj1QYi95KKPIdFUstdMy2CVRIGiK0U8sUVbk%3d&risl=&pid=ImgRaw&r=0',
-        name: 'Bánh mì',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-    {
-        image: 'https://th.bing.com/th/id/R.074d9129be8d236081dbbe9d28e89e8c?rik=e%2fMjesjXDakENg&pid=ImgRaw&r=0',
-        name: 'Phở bò',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-    {
-        image: 'https://th.bing.com/th/id/OIP.0lM593xkQsYglwZlrzA0AgHaHa?pid=ImgDet&rs=1',
-        name: 'Matcha socola',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-    {
-        image: 'https://th.bing.com/th/id/OIP.m5nPkqe6S6xp9dhZvrIOdwHaD4?pid=ImgDet&rs=1',
-        name: 'Hủ tiếu',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-    {
-        image: 'https://th.bing.com/th/id/R.645e9c75227cec18ccc0969e2b40c8d9?rik=mJbvjh63r0Hu2w&riu=http%3a%2f%2fcdn1.vietnamtourism.org.vn%2fimages%2fcom-tam_jpg.jpg&ehk=8uQOKbVC2J77LG2RqFLNmdFA%2fM%2bjX6nCBK4vx07YheA%3d&risl=&pid=ImgRaw&r=0',
-        name: 'Cơm sườn',
-        time: 20,
-        stars: 4,
-        reviews: 10,
-    },
-];
-
 function HomePage() {
+    const [totalItem, setTotalItem] = useState(0);
+    const [categoryList, setCategoryList] = useState([]);
+    const [recipeList, setRecipeList] = useState([]);
+    const [isLoading, setIsloading] = useState(false);
+
+    const [searchParams, setSearchParams] = useState(new URLSearchParams());
+
+    useEffect(() => {
+        setIsloading(true);
+        axios
+            .get(`recipes?${searchParams.toString() !== '' ? searchParams.toString() : ''}`)
+            .then((response) => {
+                const data = response.data;
+                setRecipeList(data.data);
+            })
+            .catch((err) => {
+                // console.log(err);
+            });
+        setIsloading(false);
+    }, [searchParams]);
+
+    useEffect(() => {
+        axios
+            .get(`recipe-categories`)
+            .then((response) => {
+                const data = response.data;
+                setCategoryList(data.data);
+            })
+            .catch((err) => {
+                // console.log(err);
+            });
+
+        axios
+            .get(`recipes/count`)
+            .then((response) => {
+                const data = response.data.data;
+                setTotalItem(data.count);
+            })
+            .catch((err) => {
+                // console.log(err);
+            });
+    }, []);
+
+    function handleChangeCategory(e) {
+        searchParams.set('category', e.target.value);
+        setSearchParams(new URLSearchParams(searchParams.toString()));
+    }
+
+    function handleChangeSort(e) {
+        searchParams.set('sort_by', e.target.value);
+        setSearchParams(new URLSearchParams(searchParams.toString()));
+    }
+
     return (
         <Container className={`${cx('wrapper')}`}>
             <div
@@ -76,15 +71,15 @@ function HomePage() {
                     backgroundImage: `url(${images.background})`,
                 }}
             >
-                <h1 className={cx('slogan')}>LEARN, COOK & EAT YOUR MEALS</h1>
+                <h1 className={cx('slogan')}>HỌC, NẤU & THƯỞNG THỨC</h1>
                 <div className={cx('info')}>
                     <div className={cx('info-item')}>
-                        <p className={cx('info-item-number')}>24</p>
-                        <p className={cx('info-item-title')}>Total items</p>
+                        <p className={cx('info-item-number')}>{totalItem}</p>
+                        <p className={cx('info-item-title')}>Công thức</p>
                     </div>
                     <div className={cx('info-item')}>
-                        <p className={cx('info-item-number')}>09</p>
-                        <p className={cx('info-item-title')}>Categories</p>
+                        <p className={cx('info-item-number')}>{categoryList.length}</p>
+                        <p className={cx('info-item-title')}>Loại</p>
                     </div>
                 </div>
             </div>
@@ -98,10 +93,16 @@ function HomePage() {
                             Loại:
                         </label>
 
-                        <select className={cx('filter-select')} id="category">
-                            <option value="all">Tất cả</option>
-                            <option value="rating">Món chính</option>
-                            <option value="date">Tráng miệng</option>
+                        <select
+                            onChange={handleChangeCategory}
+                            className={cx('filter-select')}
+                            id="category"
+                        >
+                            {categoryList.map((category) => (
+                                <option key={category.categoryid} value={category.name}>
+                                    {category.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -110,7 +111,11 @@ function HomePage() {
                             Sắp xếp:
                         </label>
 
-                        <select className={cx('filter-select')} id="sort-food">
+                        <select
+                            onChange={handleChangeSort}
+                            className={cx('filter-select')}
+                            id="sort-food"
+                        >
                             <option value="rating">Đánh giá</option>
                             <option value="date">Ngày đăng</option>
                         </select>
@@ -119,11 +124,15 @@ function HomePage() {
             </div>
 
             <Row>
-                {RECIPES_ITEM.map((recipe, index) => (
-                    <Col xs={6} md={4} lg={3} key={index}>
-                        <FoodItem {...recipe} />
-                    </Col>
-                ))}
+                {isLoading ? (
+                    <Spinner animation="grow" variant="success" />
+                ) : (
+                    recipeList.map((recipe) => (
+                        <Col xs={6} md={4} lg={3} key={recipe.recipeid}>
+                            <FoodItem {...recipe} />
+                        </Col>
+                    ))
+                )}
             </Row>
         </Container>
     );

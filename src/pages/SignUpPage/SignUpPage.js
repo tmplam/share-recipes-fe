@@ -1,13 +1,14 @@
 import classNames from 'classnames/bind';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faKey, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation, Form } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 
 import styles from './SignUpPage.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
-import { useState, useRef, useEffect } from 'react';
+import useAuth from '~/hooks/useAuth';
 
 import axios from '~/utils/api';
 
@@ -17,6 +18,12 @@ const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 function SignUp() {
+    const { setAuth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const to = location.state?.from?.pathname || '/';
+
     const [username, setUsername] = useState('');
     const [validUsername, setValidUsername] = useState(true);
     const [usernameFocus, setUsernameFocus] = useState(false);
@@ -31,6 +38,9 @@ function SignUp() {
     const [validMatchPwd, setValidMatchPwd] = useState(true);
     const [matchPwdFocus, setMatchPwdFocus] = useState(false);
     const matchPwdRef = useRef();
+
+    const [success, setSuccess] = useState(true);
+    const [errMsg, setErrMsg] = useState('');
 
     useEffect(() => {
         userRef.current.focus();
@@ -74,38 +84,45 @@ function SignUp() {
             });
         } else {
             try {
+                setSuccess(true);
+                setIsSubmitting(true);
                 // HANDLE SIGN UP
                 const response = await axios.post(
                     '/api/register',
                     {
-                        email: 'eve.holt@reqres.i',
+                        email: 'eve.holt@reqres.in',
                         password: 'pisstol',
                     },
                     {
-                        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                        headers: { 'Content-Type': 'application/json' },
                     },
                 );
 
-                console.log(response);
-                // console.log(JSON.stringify(response));
-                // setSuccess(true);
+                const expiration = new Date();
+                expiration.setHours(expiration.getHours() + 1);
+                const authInfo = {
+                    username,
+                    password: pwd,
+                    roles: ['user', 'admin'],
+                    token: 'iuefvgdcajxM',
+                    expiration: expiration.toString(),
+                };
 
-                //clear state and controlled inputs
-                //need value attrib on inputs for this
+                setAuth(authInfo);
+                localStorage.setItem('authInfo', JSON.stringify(authInfo));
 
-                setUsername('');
-                setPwd('');
-                setMatchPwd('');
+                navigate(to, { replace: true });
             } catch (err) {
-                console.log(err);
+                setSuccess(false);
                 if (!err?.response) {
-                    // setErrMsg('No Server Response');
-                } else if (err.response?.status === 409) {
-                    // setErrMsg('Username Taken');
+                    setErrMsg('No Server Response');
+                } else if (err.response?.status === 400) {
+                    setErrMsg('Username Taken');
                 } else {
-                    // setErrMsg('Registration Failed');
+                    setErrMsg('Registration Failed');
                 }
             }
+            setIsSubmitting(false);
         }
     }
 
@@ -123,7 +140,7 @@ function SignUp() {
                     </Col>
                     <Col lg={6} className="h-100">
                         <div className={cx('form-wrapper')}>
-                            <form className={cx('form')} onSubmit={handleSubmitForm}>
+                            <Form className={cx('form')} onSubmit={handleSubmitForm}>
                                 <h1 className={cx('title')}>Đăng Ký</h1>
                                 <div
                                     className={cx(
@@ -212,10 +229,29 @@ function SignUp() {
                                     </span>
                                 </div>
 
-                                <Button type="submit" green center w100 rounded large>
+                                <p className={cx('server-error', { hide: success })}>
+                                    <FontAwesomeIcon icon={faInfoCircle} /> {errMsg}.
+                                </p>
+
+                                <Button
+                                    disabled={isSubmitting}
+                                    type="submit"
+                                    green
+                                    center
+                                    w100
+                                    rounded
+                                    large
+                                    rightIcon={
+                                        isSubmitting ? (
+                                            <Spinner animation="border" variant="light" />
+                                        ) : (
+                                            false
+                                        )
+                                    }
+                                >
                                     Đăng ký
                                 </Button>
-                            </form>
+                            </Form>
 
                             <div className={cx('login')}>
                                 <p className={cx('login-title')}>Bạn đã có tài khoản ?</p>

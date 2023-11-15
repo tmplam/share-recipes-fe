@@ -2,10 +2,14 @@ import classNames from 'classnames/bind';
 import { faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { Container } from 'react-bootstrap';
 
-import styles from './DetailPage.module.scss';
-import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { useParams } from 'react-router-dom';
+// import { useEffect, useState } from 'react';
+
 import CommentItem from './components/CommentItem';
+import Button from '~/components/Button';
+import styles from './DetailPage.module.scss';
+// import axios from '~/utils/api';
 
 const cx = classNames.bind(styles);
 
@@ -93,6 +97,13 @@ const COMMENTS = [
 ];
 
 function DetailPage() {
+    // let { recipeId } = useParams();
+    // const { recipe, setRecipe } = useState({});
+
+    // useEffect(() => {
+    //     axios.get('')
+    // }, [recipe]);
+
     return (
         <Container>
             <div className={cx('wrapper')}>

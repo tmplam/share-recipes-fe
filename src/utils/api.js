@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-    baseURL: 'https://reqres.in/',
+    baseURL: 'http://api.congthucnauan.com/api/v1/',
 });
