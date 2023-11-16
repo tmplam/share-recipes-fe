@@ -1,0 +1,81 @@
+.wrapper {
+    display: flex;
+    height: 120px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--white);
+    border-radius: 999px;
+    margin-top: 20px;
+}
+
+.image-wrapper {
+    height: 100%;
+    display: block;
+}
+
+.image {
+    height: 100%;
+    aspect-ratio: 10 / 8;
+    object-fit: cover;
+    border-top-left-radius: 999px;
+    border-bottom-left-radius: 999px;
+
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+
+    @media screen and (max-width: 576px) {
+        aspect-ratio: 1 / 1;
+    }
+}
+
+.info {
+    flex: 1;
+    margin: 0 8px;
+}
+
+.name {
+    font-size: 2rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.des {
+    font-size: 1.8rem;
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0;
+}
+
+.btn-group {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.btn {
+    background-color: var(--green);
+    font-weight: 100;
+    margin-right: 8px;
+    color: var(--white);
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    + .btn {
+        margin-top: 8px;
+    }
+}
+
+.btn.btn-danger {
+    background-color: rgb(220, 52, 52);
+}

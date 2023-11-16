@@ -6,6 +6,8 @@ import styles from './HomePage.module.scss';
 import FoodItem from '~/pages/HomePage/components/FoodItem';
 import images from '~/assets/images';
 import axios from '~/utils/api';
+// Search context
+import useSearch from '~/hooks/useSearch';
 
 const cx = classNames.bind(styles);
 
@@ -15,12 +17,19 @@ function HomePage() {
     const [recipeList, setRecipeList] = useState([]);
     const [isLoading, setIsloading] = useState(false);
 
+    // Search context
+    const { keyword } = useSearch();
+
     const [searchParams, setSearchParams] = useState(new URLSearchParams());
 
     useEffect(() => {
         setIsloading(true);
         axios
-            .get(`recipes?${searchParams.toString() !== '' ? searchParams.toString() : ''}`)
+            .get(
+                `recipes?${
+                    searchParams.toString() !== '' ? searchParams.toString() : ''
+                }&keyword=${keyword}`,
+            )
             .then((response) => {
                 const data = response.data;
                 setRecipeList(data.data);
@@ -29,7 +38,7 @@ function HomePage() {
                 // console.log(err);
             });
         setIsloading(false);
-    }, [searchParams]);
+    }, [searchParams, keyword]);
 
     useEffect(() => {
         axios
@@ -41,7 +50,6 @@ function HomePage() {
             .catch((err) => {
                 // console.log(err);
             });
-
         axios
             .get(`recipes/count`)
             .then((response) => {
@@ -78,7 +86,7 @@ function HomePage() {
                         <p className={cx('info-item-title')}>Công thức</p>
                     </div>
                     <div className={cx('info-item')}>
-                        <p className={cx('info-item-number')}>{categoryList.length}</p>
+                        <p className={cx('info-item-number')}>{categoryList.length - 1}</p>
                         <p className={cx('info-item-title')}>Loại</p>
                     </div>
                 </div>
@@ -99,7 +107,10 @@ function HomePage() {
                             id="category"
                         >
                             {categoryList.map((category) => (
-                                <option key={category.categoryid} value={category.name}>
+                                <option
+                                    key={category.categoryid}
+                                    value={category.name !== 'Tất cả' ? category.categoryid : 'all'}
+                                >
                                     {category.name}
                                 </option>
                             ))}

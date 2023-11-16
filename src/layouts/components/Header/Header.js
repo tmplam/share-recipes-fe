@@ -27,8 +27,9 @@ import images from '~/assets/images';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
 import useAuth from '~/hooks/useAuth';
+import useSearch from '~/hooks/useSearch';
 import axios from '~/utils/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +42,7 @@ const adminMenu = [
     {
         icon: <FontAwesomeIcon icon={faListCheck} />,
         title: 'Pending recipes',
-        to: '/admin/accept',
+        to: '/admin/pending',
     },
 ];
 
@@ -77,40 +78,57 @@ const userMenu = [
 function Header() {
     const location = useLocation();
     const { auth } = useAuth();
+    // Search context
+    const { setKeyword } = useSearch();
     const [userInfo, setUserInfo] = useState({});
+    const [searchKeyword, setSearchKeyword] = useState('');
 
-    if (auth?.token && auth?.token !== 'EXPIRED') {
-        axios
-            .get('users/profile', {
-                headers: {
-                    Authorization: `${auth.token}`,
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then((response) => {
-                const data = response.data.data;
-                setUserInfo(data);
-            })
-            .catch((error) => {
-                // console.log(error);
-            });
+    useEffect(() => {
+        if (auth?.token && auth?.token !== 'EXPIRED') {
+            axios
+                .get('users/profile', {
+                    headers: {
+                        Authorization: `${auth.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then((response) => {
+                    const data = response.data.data;
+                    setUserInfo(data);
+                })
+                .catch((error) => {
+                    // console.log(error);
+                });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    function handleSubmitForm(e) {
+        e.preventDefault();
+        // Search context
+        setKeyword(searchKeyword.trim());
     }
 
     return (
         <header className={cx('wrapper')}>
             <Container>
                 <div className={cx('header')}>
-                    <Link className={cx('logo')} to={'/'}>
+                    <Link className={cx('logo')} to="/">
                         <img className={cx('logo')} src={images.logo} alt="logo" />
                     </Link>
 
                     {location.pathname === '/' ? (
-                        <div className={cx('search')}>
-                            <input placeholder="Search recipes..." />
+                        <form onSubmit={handleSubmitForm} id="search-form" className={cx('search')}>
+                            <input
+                                value={searchKeyword}
+                                onChange={(e) => setSearchKeyword(e.target.value)}
+                                placeholder="Search recipes..."
+                                spellCheck={false}
+                            />
                             <button className={cx('search-btn')}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                             </button>
-                        </div>
+                        </form>
                     ) : (
                         ''
                     )}

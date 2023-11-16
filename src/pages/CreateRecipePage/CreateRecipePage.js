@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import { Col, Container, Row } from 'react-bootstrap';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Editor } from '@tinymce/tinymce-react';
 
@@ -8,22 +8,26 @@ import styles from './CreateRecipePage.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 
+import axios from '~/utils/api';
+
 const cx = classNames.bind(styles);
 
 function AddRecipePage() {
-    const [namehValue, setNameValue] = useState('');
+    const nameRef = useRef();
+    const categoryRef = useRef();
     const imageRef = useRef();
-    const [categoryValue, setCategoryValue] = useState('');
-    const [timeValue, setTimeValue] = useState('');
-    const descRef = useRef(null);
-    const ingreRef = useRef(null);
-    const instructRef = useRef(null);
+    const timeRef = useRef();
+
+    const descRef = useRef();
+    const ingreRef = useRef();
+    const instructRef = useRef();
 
     const tinyInit = {
-        statusbar: false,
+        // statusbar: false,
         height: 400,
         menubar: false,
         plugins: [
+            'wordcount',
             'advlist',
             'autolink',
             'lists',
@@ -44,7 +48,7 @@ function AddRecipePage() {
         ],
         toolbar:
             'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
+            'bold italic underline | forecolor backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
             'removeformat',
         content_style: `
@@ -54,15 +58,32 @@ function AddRecipePage() {
             `,
     };
 
+    const [categoryList, setCategoryList] = useState([]);
+    useEffect(() => {
+        axios
+            .get(`recipe-categories`)
+            .then((response) => {
+                const data = response.data;
+                setCategoryList(data.data);
+            })
+            .catch((err) => {
+                // console.log(err);
+            });
+    }, []);
+
     function handleSubmit(event) {
         event.preventDefault();
 
-        console.log(namehValue);
-        console.log(imageRef.current.files[0]);
-        console.log(categoryValue);
-        console.log(timeValue);
+        if (nameRef.current.value.trim() === '') {
+            // console.log(123);
+        }
 
-        // console.log(descRef.current.getContent());
+        // console.log(nameValue);
+        // console.log(imageRef.current.files[0]);
+        // console.log(categoryValue);
+        // console.log(timeValue);
+
+        console.log(descRef.current.plugins.wordcount.getCount());
         console.log(ingreRef.current.getContent());
         console.log(instructRef.current.getContent());
     }
@@ -107,12 +128,10 @@ function AddRecipePage() {
                                     <input
                                         id="name"
                                         autoComplete="false"
-                                        value={namehValue}
-                                        onChange={(e) => setNameValue(e.target.value)}
                                         className={cx('form-control')}
                                         type="text"
                                         placeholder="Tên công thức"
-                                        required
+                                        ref={nameRef}
                                     />
                                     <span className={cx('error')}></span>
                                 </div>
@@ -120,15 +139,22 @@ function AddRecipePage() {
                                 <div className={cx('form-group')}>
                                     <label htmlFor="category">Loại công thức</label>
                                     <select
-                                        value={categoryValue}
-                                        onChange={(e) => setCategoryValue(e.target.value)}
                                         id="category"
                                         className={cx('form-control')}
+                                        ref={categoryRef}
+                                        defaultValue=""
                                     >
-                                        <option value="0">Món chính</option>
-                                        <option value="1">Tráng miệng</option>
-                                        <option value="2">Đồ uống</option>
-                                        <option value="3">Tàu nhanh</option>
+                                        <option value="" disabled>
+                                            -- Chọn loại --
+                                        </option>
+                                        {categoryList.map((category) => (
+                                            <option
+                                                key={category.categoryid}
+                                                value={category.categoryid}
+                                            >
+                                                {category.name}
+                                            </option>
+                                        ))}
                                     </select>
                                     <span className={cx('error')}></span>
                                 </div>
@@ -140,7 +166,6 @@ function AddRecipePage() {
                                         ref={imageRef}
                                         className={cx('form-control', 'form-file')}
                                         type="file"
-                                        required
                                     />
                                     <span className={cx('error')}></span>
                                 </div>
@@ -158,7 +183,6 @@ function AddRecipePage() {
                                 <div className={cx('form-group')}>
                                     <label>Nguyên liệu</label>
                                     <Editor
-                                        required
                                         apiKey="e66hvcl6cot54m4i4iv87j73ukdk8ulfp831tjbi0h502kfy"
                                         onInit={(evt, editor) => (ingreRef.current = editor)}
                                         init={tinyInit}
@@ -181,12 +205,10 @@ function AddRecipePage() {
                                     <input
                                         id="time"
                                         autoComplete="false"
-                                        value={timeValue}
-                                        onChange={(e) => setTimeValue(e.target.value)}
                                         className={cx('form-control')}
                                         placeholder="Thời gian nấu"
                                         type="text"
-                                        required
+                                        ref={timeRef}
                                     />
                                     <span className={cx('error')}></span>
                                 </div>

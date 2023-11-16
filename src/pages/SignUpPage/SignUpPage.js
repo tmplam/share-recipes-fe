@@ -88,23 +88,23 @@ function SignUp() {
                 setIsSubmitting(true);
                 // HANDLE SIGN UP
                 const response = await axios.post(
-                    '/api/register',
+                    'auth/register',
                     {
-                        email: 'eve.holt@reqres.in',
-                        password: 'pisstol',
+                        username,
+                        password: pwd,
                     },
                     {
                         headers: { 'Content-Type': 'application/json' },
                     },
                 );
 
+                const data = response.data;
+
                 const expiration = new Date();
                 expiration.setHours(expiration.getHours() + 1);
                 const authInfo = {
-                    username,
-                    password: pwd,
-                    roles: ['user', 'admin'],
-                    token: 'iuefvgdcajxM',
+                    token: data.accessToken,
+                    roles: data.role,
                     expiration: expiration.toString(),
                 };
 
@@ -115,11 +115,9 @@ function SignUp() {
             } catch (err) {
                 setSuccess(false);
                 if (!err?.response) {
-                    setErrMsg('No Server Response');
-                } else if (err.response?.status === 400) {
-                    setErrMsg('Username Taken');
+                    setErrMsg('Lỗi! Máy chủ không có phản hổi!');
                 } else {
-                    setErrMsg('Registration Failed');
+                    setErrMsg(err.response.data.message);
                 }
             }
             setIsSubmitting(false);
