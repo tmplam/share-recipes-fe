@@ -9,12 +9,12 @@ import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
-function PendingItem({ image, name, description }) {
+function PendingItem({ name, description, recipeavatar }) {
     return (
         <div className={cx('wrapper')}>
             <Tippy delay={[0, 50]} content="Xem chi tiết" placement="auto">
                 <Link className={cx('image-wrapper')}>
-                    <img className={cx('image')} src={image} alt={name} />
+                    <img className={cx('image')} src={recipeavatar} alt={name} />
                 </Link>
             </Tippy>
 

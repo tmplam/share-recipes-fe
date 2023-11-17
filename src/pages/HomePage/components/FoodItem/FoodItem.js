@@ -26,12 +26,12 @@ function FoodItem({ recipeid, name, recipeavatar, estimatedtime, average_rating,
                     <FontAwesomeIcon icon={faStar} />
                     <FontAwesomeIcon icon={faStar} />
                 </div>
-                <div className={cx('reviews')}>{'(' + reviews + ' Reviews)'}</div>
+                <div className={cx('reviews')}>{'(' + reviews + ' Đánh giá)'}</div>
             </div>
             <div className={cx('footer')}>
-                <span className={cx('time')}>{estimatedtime + ' mins'}</span>
+                <span className={cx('time')}>{estimatedtime + ' phút'}</span>
                 <Link className={cx('view-btn')} to={`/recipes/${recipeid}`}>
-                    View Recipe
+                    Xem chi tiết
                 </Link>
             </div>
         </div>

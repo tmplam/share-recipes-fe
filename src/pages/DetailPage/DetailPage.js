@@ -1,72 +1,18 @@
 import classNames from 'classnames/bind';
-import { faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faHeart, faPlateWheat, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faNewspaper } from '@fortawesome/free-regular-svg-icons';
 import { Container } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { useParams } from 'react-router-dom';
-// import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 import CommentItem from './components/CommentItem';
 import Button from '~/components/Button';
 import styles from './DetailPage.module.scss';
-// import axios from '~/utils/api';
+import axios from '~/utils/api';
 
 const cx = classNames.bind(styles);
-
-const RECIPE = {
-    image: 'https://th.bing.com/th/id/R.783ecca519ae0a9e6828595c7682a6bb?rik=6YgYbtr%2bOavtoQ&pid=ImgRaw&r=0',
-    name: 'Bò sốt tiêu đen như tâm hồn của bạn',
-    time: 20,
-    stars: 4,
-    reviews: 10,
-    desc: `Món bò sốt tiêu đen (Black Pepper Beef) là một món ăn ngon và phổ biến trong nhiều nền ẩm thực Á Đông. Món này thường có vị thơm ngon, ngọt ngào, cay cay từ tiêu đen và mặn mặn từ nước tương. Dưới đây là một phần giới thiệu về món này.`,
-    type: 'Tráng bụng',
-    indredients: (
-        <ul>
-            <li>400g thịt bò (loại nạc dày như bò bắp hoặc bò tái lát mỏng)</li>
-            <li>1-2 quả hành tây, cắt thành lát mỏng</li>
-            <li>3-4 tép tỏi, băm nhuyễn</li>
-            <li>1-2 ớt sừng đỏ (tùy khẩu vị), cắt mỏng (loại ớt có nhiệt độ tuỳ ý)</li>
-            <li>1/2-1 quả ớt chuông đỏ, cắt mỏng</li>
-            <li>2-3 muỗng canh dầu ăn</li>
-            <li>2-3 muỗng canh nước tương</li>
-            <li>1 muỗng canh nước mắm</li>
-            <li>1 muỗng canh tiêu đen xay mịn</li>
-            <li>1/2 muỗng cà phê đường</li>
-            <li>
-                Rau sống (bắp cải, cải xanh, ngò rí, hoặc bất kỳ loại rau sống nào bạn thích) để
-                trang trí
-            </li>
-        </ul>
-    ),
-    guid: (
-        <ul>
-            <li>
-                Chuẩn bị thịt bò bằng cách cắt thành lát mỏng. Bạn có thể để thịt nguyên hoặc cắt
-                thành sợi mỏng theo sợi thịt.
-            </li>
-            <li>
-                Trong một tô, trộn thịt bò với nước tương, nước mắm, tiêu đen xay mịn và đường. Đậy
-                tô bò vào tủ lạnh để thịt hấp thu gia vị ít nhất 30 phút.
-            </li>
-            <li>
-                Trong một nồi hoặc chảo, đun nóng dầu ăn ở lửa lớn. Khi dầu nóng, thêm tỏi băm và
-                xào cho đến khi thơm và có màu vàng.
-            </li>
-            <li>
-                Thêm thịt bò đã ngâm gia vị vào nồi và xào lên tới khi thịt chuyển sang màu nâu và
-                chín.
-            </li>
-            <li>
-                Tiếp theo, thêm hành tây, ớt sừng và ớt chuông vào nồi. Nấu thêm vài phút nữa để rau
-                cải và ớt chín mềm, nhưng vẫn giữ nguyên màu sắc tươi sáng.
-            </li>
-            <li>Thêm thêm tiêu đen xay mịn và nấu chung trong khoảng 1-2 phút nữa.</li>
-            <li>Khi mọi thứ đã chín và hỗn hợp thịt bò có mùi thơm, bạn có thể tắt bếp.</li>
-            <li>Đặt món bò sốt tiêu đen lên đĩa và trang trí với rau sống.</li>
-        </ul>
-    ),
-};
 
 const COMMENTS = [
     {
@@ -97,35 +43,53 @@ const COMMENTS = [
 ];
 
 function DetailPage() {
-    // let { recipeId } = useParams();
-    // const { recipe, setRecipe } = useState({});
+    let { recipeId } = useParams();
+    const [recipe, setRecipe] = useState({});
 
-    // useEffect(() => {
-    //     axios.get('')
-    // }, [recipe]);
+    useEffect(() => {
+        axios
+            .get(`recipes/${recipeId}`)
+            .then((response) => {
+                setRecipe(response?.data.data);
+            })
+            .catch((err) => {});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Container>
             <div className={cx('wrapper')}>
                 <div className={cx('recipe-info')}>
-                    <h1 className={cx('name')}>{RECIPE.name}</h1>
+                    <h1 className={cx('name')}>{recipe.name}</h1>
                     <div className={cx('detail')}>
                         <div className={cx('desc')}>
-                            <img className={cx('food-img')} src={RECIPE.image} alt="anh" />
+                            <img className={cx('food-img')} src={recipe.recipeavatar} alt="anh" />
                             <div className={cx('desc-detail')}>
-                                <p>{RECIPE.desc}</p>
+                                <div>
+                                    <h2 className={cx('title')}>
+                                        <FontAwesomeIcon icon={faNewspaper} /> Mô tả:
+                                    </h2>
+                                    <p>{recipe.description}</p>
+                                </div>
                                 <p>
-                                    <strong>TYPE: </strong> {RECIPE.type}
+                                    <strong style={{ fontWeight: 600, fontSize: 2.2 + 'rem' }}>
+                                        Loại:{' '}
+                                    </strong>{' '}
+                                    {recipe.category}
                                 </p>
                             </div>
                         </div>
                         <div className={cx('ingre-wrapper')}>
-                            <h2 className={cx('title')}>Nguyên liệu</h2>
-                            <div>{RECIPE.indredients}</div>
+                            <h2 className={cx('title')}>
+                                <FontAwesomeIcon icon={faPlateWheat} /> Nguyên liệu:
+                            </h2>
+                            <div>{recipe.ingredients}</div>
                         </div>
                         <div className={cx('guid-wrapper')}>
-                            <h2 className={cx('title')}>Hướng dẫn</h2>
-                            <div>{RECIPE.guid}</div>
+                            <h2 className={cx('title')}>
+                                <FontAwesomeIcon icon={faUtensils} /> Hướng dẫn:
+                            </h2>
+                            <div>{recipe.instruction}</div>
                         </div>
                     </div>
                 </div>

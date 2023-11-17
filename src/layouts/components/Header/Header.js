@@ -36,12 +36,12 @@ const cx = classNames.bind(styles);
 const adminMenu = [
     {
         icon: <FontAwesomeIcon icon={faCircleUser} />,
-        title: 'Manage users',
+        title: 'Quản lý user',
         to: '/admin/manage-users',
     },
     {
         icon: <FontAwesomeIcon icon={faListCheck} />,
-        title: 'Pending recipes',
+        title: 'Danh sách chờ',
         to: '/admin/pending',
     },
 ];
@@ -49,27 +49,27 @@ const adminMenu = [
 const userMenu = [
     {
         icon: <FontAwesomeIcon icon={faUser} />,
-        title: 'Profile',
+        title: 'Cá nhân',
         to: '/',
     },
     {
         icon: <FontAwesomeIcon icon={faShareFromSquare} />,
-        title: 'Share recipe',
+        title: 'Chia sẻ',
         to: '/recipes/create',
     },
     {
         icon: <FontAwesomeIcon icon={faBookmark} />,
-        title: 'Your recipes',
+        title: 'Đã đăng',
         to: '/recipes/shared',
     },
     {
         icon: <FontAwesomeIcon icon={faHeart} />,
-        title: 'Favourite',
+        title: 'Yêu thích',
         to: '/recipes/favourite',
     },
     {
         icon: <FontAwesomeIcon icon={faArrowRightFromBracket} />,
-        title: 'Logout',
+        title: 'Đăng xuất',
         to: '/logout',
         separate: true,
     },
@@ -122,7 +122,7 @@ function Header() {
                             <input
                                 value={searchKeyword}
                                 onChange={(e) => setSearchKeyword(e.target.value)}
-                                placeholder="Search recipes..."
+                                placeholder="Tìm kiếm ..."
                                 spellCheck={false}
                             />
                             <button className={cx('search-btn')}>
@@ -149,7 +149,7 @@ function Header() {
                                 ) : (
                                     false
                                 )}
-                                <Tippy delay={[0, 50]} content="Notifications" placement="bottom">
+                                <Tippy delay={[0, 50]} content="Thông báo" placement="bottom">
                                     <button className={cx('action-btn', 'noti-btn')}>
                                         <FontAwesomeIcon icon={faBell} />
                                     </button>

@@ -56,6 +56,10 @@
             cursor: pointer;
         }
     }
+
+    @media screen and (max-width: 767.5px) {
+        display: none;
+    }
 }
 
 // CONTROL

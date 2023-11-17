@@ -4,8 +4,10 @@
 
 // DETAIL
 .name {
-    margin: 12px 0;
-    font-weight: 600;
+    margin: 14px 0 20px 0;
+    font-size: 3.2rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 .desc {
@@ -14,6 +16,8 @@
 
 .food-img {
     width: 50%;
+    aspect-ratio: 10 / 6;
+    object-fit: cover;
     display: block;
     margin-right: 12px;
     border-radius: var(--small-radius);
@@ -38,6 +42,8 @@
 
 .title {
     margin: 8px 0;
+    font-size: 2.4rem;
+    font-weight: 600;
 }
 
 .title ~ div ul {
@@ -54,7 +60,7 @@
 .save p,
 .rating p {
     font-size: 2rem;
-    font-weight: 400;
+    font-weight: 600;
     margin: 0;
 }
 

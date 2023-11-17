@@ -1,6 +1,9 @@
 // normalize css npm
 @import 'normalize.css';
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@300;400;500;600;700;800;900&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
 @import url('bootstrap/dist/css/bootstrap.min.css');
 
 :root {
@@ -18,7 +21,8 @@
     --header-height: 80px;
 
     // --font-family: 'IBM Plex Sans', sans-serif;
-    --font-family: cursive;
+    --font-family: 'Bitter', serif;
+    --sub-font-1: 'Agbalumo', serif;
 }
 
 * {

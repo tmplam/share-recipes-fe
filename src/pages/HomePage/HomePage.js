@@ -93,7 +93,7 @@ function HomePage() {
             </div>
 
             <div className={cx('filter')}>
-                <p className={cx('filter-name')}>ALL RECIPES</p>
+                <p className={cx('filter-name')}>TẤT CẢ CÔNG THỨC</p>
 
                 <div className={cx('filter-group')}>
                     <div className={cx('filter-control')}>
@@ -127,8 +127,8 @@ function HomePage() {
                             className={cx('filter-select')}
                             id="sort-food"
                         >
-                            <option value="rating">Đánh giá</option>
                             <option value="date">Ngày đăng</option>
+                            <option value="rating">Đánh giá</option>
                         </select>
                     </div>
                 </div>
