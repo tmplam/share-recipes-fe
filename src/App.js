@@ -8,7 +8,9 @@ import DetailPage from './pages/DetailPage';
 import Login from './pages/LoginPage';
 import SignUp from './pages/SignUpPage';
 import CreateRecipePage from './pages/CreateRecipePage';
+import FavouritePage from './pages/FavourtitePage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 // Admin pages
 import PendingPage from './pages/Admin/PendingPage';
@@ -33,7 +35,16 @@ const router = createBrowserRouter([
                     {
                         path: '',
                         element: <RequireAuth all />,
-                        children: [{ path: 'create', element: <CreateRecipePage /> }],
+                        children: [
+                            {
+                                path: 'create',
+                                element: <CreateRecipePage />,
+                            },
+                            {
+                                path: 'favourite',
+                                element: <FavouritePage />,
+                            },
+                        ],
                     },
                 ],
             },
@@ -59,6 +70,10 @@ const router = createBrowserRouter([
                 element: <PendingPage />,
             },
         ],
+    },
+    {
+        path: '*',
+        element: <NotFoundPage />,
     },
 ]);
 

@@ -4,6 +4,7 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap';
 
 import styles from './HomePage.module.scss';
 import FoodItem from '~/pages/HomePage/components/FoodItem';
+import Pagination from '~/components/Pagination';
 import images from '~/assets/images';
 import axios from '~/utils/api';
 // Search context
@@ -12,6 +13,10 @@ import useSearch from '~/hooks/useSearch';
 const cx = classNames.bind(styles);
 
 function HomePage() {
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    const per_page = 8;
+
     const [totalItem, setTotalItem] = useState(0);
     const [categoryList, setCategoryList] = useState([]);
     const [recipeList, setRecipeList] = useState([]);
@@ -19,26 +24,26 @@ function HomePage() {
 
     // Search context
     const { keyword } = useSearch();
-
-    const [searchParams, setSearchParams] = useState(new URLSearchParams());
+    const [category, setCategory] = useState('');
+    const [sort, setSort] = useState('');
 
     useEffect(() => {
         setIsloading(true);
         axios
             .get(
-                `recipes?${
-                    searchParams.toString() !== '' ? searchParams.toString() : ''
-                }&keyword=${keyword}`,
+                `recipes?category=${category}&page=${page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
             )
             .then((response) => {
                 const data = response.data;
+                setPage(data.page);
+                setTotalPage(data.total_page);
                 setRecipeList(data.data);
             })
             .catch((err) => {
                 // console.log(err);
             });
         setIsloading(false);
-    }, [searchParams, keyword]);
+    }, [keyword, page, category, sort]);
 
     useEffect(() => {
         axios
@@ -62,13 +67,15 @@ function HomePage() {
     }, []);
 
     function handleChangeCategory(e) {
-        searchParams.set('category', e.target.value);
-        setSearchParams(new URLSearchParams(searchParams.toString()));
+        setCategory(e.target.value);
     }
 
     function handleChangeSort(e) {
-        searchParams.set('sort_by', e.target.value);
-        setSearchParams(new URLSearchParams(searchParams.toString()));
+        setSort(e.target.value);
+    }
+
+    function handlePageChange(page) {
+        setPage(page);
     }
 
     return (
@@ -93,7 +100,9 @@ function HomePage() {
             </div>
 
             <div className={cx('filter')}>
-                <p className={cx('filter-name')}>TẤT CẢ CÔNG THỨC</p>
+                <p className={cx('filter-name')}>
+                    {keyword !== '' ? `Từ khóa "${keyword}"` : 'TẤT CẢ CÔNG THỨC'}
+                </p>
 
                 <div className={cx('filter-group')}>
                     <div className={cx('filter-control')}>
@@ -106,11 +115,9 @@ function HomePage() {
                             className={cx('filter-select')}
                             id="category"
                         >
+                            <option value="all">Tất cả</option>
                             {categoryList.map((category) => (
-                                <option
-                                    key={category.categoryid}
-                                    value={category.name !== 'Tất cả' ? category.categoryid : 'all'}
-                                >
+                                <option key={category.categoryid} value={category.categoryid}>
                                     {category.name}
                                 </option>
                             ))}
@@ -134,17 +141,27 @@ function HomePage() {
                 </div>
             </div>
 
-            <Row>
-                {isLoading ? (
-                    <Spinner animation="grow" variant="success" />
-                ) : (
-                    recipeList.map((recipe) => (
-                        <Col xs={6} md={4} lg={3} key={recipe.recipeid}>
-                            <FoodItem {...recipe} />
-                        </Col>
-                    ))
-                )}
-            </Row>
+            <div>
+                <Row>
+                    {isLoading ? (
+                        <Spinner animation="grow" variant="success" />
+                    ) : (
+                        recipeList.map((recipe) => (
+                            <Col xs={6} md={4} lg={3} key={recipe.recipeid}>
+                                <FoodItem {...recipe} />
+                            </Col>
+                        ))
+                    )}
+                </Row>
+
+                <div className={cx('pagination-wrapper')}>
+                    <Pagination
+                        page={page}
+                        total_page={totalPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            </div>
         </Container>
     );
 }

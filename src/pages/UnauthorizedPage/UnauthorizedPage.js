@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styles from './UnauthorizedPage.module.scss';
 
+// eslint-disable-next-line no-unused-vars
 const cx = classNames.bind(styles);
 
 function Unauthorized() {

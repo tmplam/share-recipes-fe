@@ -1,0 +1,67 @@
+$height: 40px;
+
+.pagination ul {
+    display: inline-flex;
+    flex-wrap: wrap;
+    background: var(--white);
+    padding: 2px;
+    border-radius: 50px;
+    margin: 0;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pagination ul li {
+    color: var(--green);
+    list-style: none;
+    line-height: $height;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.pagination ul li.numb {
+    height: $height;
+    width: $height;
+    margin: 0 3px;
+    line-height: $height;
+    border-radius: 50%;
+}
+
+.pagination ul li.numb.first {
+    margin: 0px 3px 0 -5px;
+}
+
+.pagination ul li.numb.last {
+    margin: 0px -5px 0 3px;
+}
+
+.pagination ul li.dots {
+    font-size: 22px;
+    cursor: default;
+}
+
+.pagination ul li.btn {
+    padding: 0 20px;
+    border-radius: 50px;
+}
+
+.pagination ul li.btn.disabled {
+    pointer-events: none;
+    color: rgba(128, 193, 37, 0.6);
+}
+
+.pagination li.active {
+    color: var(--white);
+    background: var(--green);
+}
+
+.pagination ul li.numb:hover:not(.active),
+.pagination ul li:first-child:hover,
+.pagination ul li:last-child:hover {
+    color: var(--white);
+    background: rgba(128, 193, 37, 0.6);
+    // background: var(--green);
+}

@@ -8,7 +8,16 @@ import Button from '../../../../components/Button';
 
 const cx = classNames.bind(styles);
 
-function FoodItem({ recipeid, name, recipeavatar, estimatedtime, average_rating, reviews }) {
+function FoodItem({
+    recipeid,
+    name,
+    recipeavatar,
+    estimatedtime,
+    average_rating,
+    datesubmit,
+    description,
+    reviews,
+}) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('image-wrapper')}>
@@ -17,7 +26,11 @@ function FoodItem({ recipeid, name, recipeavatar, estimatedtime, average_rating,
                     <FontAwesomeIcon icon={faHeart} />
                 </Button>
             </div>
-            <p className={cx('name')}>{name} </p>
+
+            <div className={cx('info')}>
+                <p className={cx('name')}>{name}</p>
+                {/* <p className={cx('name')}>{description}</p> */}
+            </div>
             <div className={cx('rating')}>
                 <div className={cx('stars')}>
                     <FontAwesomeIcon icon={faStar} />
@@ -28,6 +41,7 @@ function FoodItem({ recipeid, name, recipeavatar, estimatedtime, average_rating,
                 </div>
                 <div className={cx('reviews')}>{'(' + reviews + ' Đánh giá)'}</div>
             </div>
+
             <div className={cx('footer')}>
                 <span className={cx('time')}>{estimatedtime + ' phút'}</span>
                 <Link className={cx('view-btn')} to={`/recipes/${recipeid}`}>

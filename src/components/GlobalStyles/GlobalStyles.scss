@@ -1,6 +1,7 @@
 // normalize css npm
 @import 'normalize.css';
 @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 // @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 // @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
@@ -23,6 +24,7 @@
     // --font-family: 'IBM Plex Sans', sans-serif;
     --font-family: 'Bitter', serif;
     --sub-font-1: 'Agbalumo', serif;
+    --sub-font-2: 'Quicksand', sans-serif;
 }
 
 * {
@@ -74,8 +76,4 @@ input,
 
 body {
     background-color: var(--background-color);
-}
-
-input#file-upload-button {
-    color: red !important;
 }
