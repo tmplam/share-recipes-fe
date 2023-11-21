@@ -20,9 +20,11 @@ function FavouriteItem({
     description,
     reviews,
     category,
+    onDelete,
 }) {
     function handleDelete(e) {
         e.preventDefault();
+        onDelete(recipeid);
     }
     return (
         <Link

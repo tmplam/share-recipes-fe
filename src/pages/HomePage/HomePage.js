@@ -9,11 +9,17 @@ import images from '~/assets/images';
 import axios from '~/utils/api';
 // Search context
 import useSearch from '~/hooks/useSearch';
+import { useSearchParams } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
 function HomePage() {
-    const [page, setPage] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [page, setPage] = useState(() => {
+        return Number.parseInt(searchParams.get('page')) || 1;
+    });
+
     const [totalPage, setTotalPage] = useState(0);
     const per_page = 8;
 
@@ -24,8 +30,14 @@ function HomePage() {
 
     // Search context
     const { keyword } = useSearch();
-    const [category, setCategory] = useState('');
-    const [sort, setSort] = useState('');
+
+    const [category, setCategory] = useState(() => {
+        return searchParams.get('category') || '';
+    });
+
+    const [sort, setSort] = useState(() => {
+        return searchParams.get('sort_by') || 'date';
+    });
 
     useEffect(() => {
         setIsloading(true);
@@ -68,14 +80,26 @@ function HomePage() {
 
     function handleChangeCategory(e) {
         setCategory(e.target.value);
+        setSearchParams((prev) => {
+            prev.set('category', e.target.value);
+            return prev;
+        });
     }
 
     function handleChangeSort(e) {
         setSort(e.target.value);
+        setSearchParams((prev) => {
+            prev.set('sort_by', e.target.value);
+            return prev;
+        });
     }
 
     function handlePageChange(page) {
         setPage(page);
+        setSearchParams((prev) => {
+            prev.set('page', page);
+            return prev;
+        });
     }
 
     return (
@@ -154,13 +178,17 @@ function HomePage() {
                     )}
                 </Row>
 
-                <div className={cx('pagination-wrapper')}>
-                    <Pagination
-                        page={page}
-                        total_page={totalPage}
-                        onPageChange={handlePageChange}
-                    />
-                </div>
+                {totalPage > 1 ? (
+                    <div className={cx('pagination-wrapper')}>
+                        <Pagination
+                            page={page}
+                            total_page={totalPage}
+                            onPageChange={handlePageChange}
+                        />
+                    </div>
+                ) : (
+                    false
+                )}
             </div>
         </Container>
     );

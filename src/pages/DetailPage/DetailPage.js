@@ -6,11 +6,13 @@ import { Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import CommentItem from './components/CommentItem';
 import Button from '~/components/Button';
 import styles from './DetailPage.module.scss';
 import axios from '~/utils/api';
+import useAuth from '~/hooks/useAuth';
 
 const cx = classNames.bind(styles);
 
@@ -43,6 +45,7 @@ const COMMENTS = [
 ];
 
 function DetailPage() {
+    const { auth } = useAuth();
     let { recipeId } = useParams();
     const [recipe, setRecipe] = useState({});
 
@@ -55,6 +58,28 @@ function DetailPage() {
             .catch((err) => {});
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    async function handleAddToFavourite(e) {
+        axios
+            .post(
+                `users/favourites`,
+                {
+                    recipe: recipeId,
+                },
+                {
+                    headers: {
+                        Authorization: auth.token,
+                    },
+                },
+            )
+            .then((response) => {
+                const data = response.data;
+                toast.success(data.message);
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message);
+            });
+    }
 
     return (
         <Container>
@@ -104,6 +129,7 @@ function DetailPage() {
                             className={cx('favourite-btn')}
                             title="Add to favourite"
                             leftIcon={<FontAwesomeIcon icon={faHeart} />}
+                            onClick={handleAddToFavourite}
                         >
                             Save
                         </Button>

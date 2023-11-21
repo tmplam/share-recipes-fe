@@ -3,15 +3,18 @@ import { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 import Pagination from '~/components/Pagination';
 import FavouriteItem from './components/FavouriteItem';
 import styles from './FavouritePage.module.scss';
 import axios from '~/utils/api';
+import useAuth from '~/hooks/useAuth';
 
 const cx = classNames.bind(styles);
 
 function FavouritePage() {
+    const { auth } = useAuth();
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
     const per_page = 4;
@@ -26,7 +29,12 @@ function FavouritePage() {
     useEffect(() => {
         axios
             .get(
-                `recipes?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
+                `/users/favourites?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
+                {
+                    headers: {
+                        Authorization: auth.token,
+                    },
+                },
             )
             .then((response) => {
                 const data = response.data;
@@ -37,7 +45,7 @@ function FavouritePage() {
             .catch((err) => {
                 // console.log(err);
             });
-    }, [page, keyword, category]);
+    }, [page, keyword, category, auth]);
 
     useEffect(() => {
         axios
@@ -47,7 +55,7 @@ function FavouritePage() {
                 setCategoryList(data.data);
             })
             .catch((err) => {
-                // console.log(err);
+                toast.error(err?.response?.data?.message | 'Lỗi server!');
             });
     }, []);
 
@@ -58,6 +66,23 @@ function FavouritePage() {
     function handleSubmitSearch(e) {
         e.preventDefault();
         setKeyword(keywordRef.current.value);
+    }
+
+    function handleDeleteFavourite(recipeId) {
+        axios
+            .delete(`users/favourites/${recipeId}`, {
+                headers: {
+                    Authorization: auth.token,
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                toast.success(data.message);
+                setFavouriteList((prev) => prev.filter((recipe) => recipe.recipeid !== recipeId));
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message);
+            });
     }
 
     return (
@@ -101,7 +126,7 @@ function FavouritePage() {
                 <Row className="gx-3">
                     {favouriteList.map((recipe) => (
                         <Col xs={12} md={6} lg={4} xl={3} key={recipe.recipeid}>
-                            <FavouriteItem {...recipe} />
+                            <FavouriteItem onDelete={handleDeleteFavourite} {...recipe} />
                         </Col>
                     ))}
                 </Row>

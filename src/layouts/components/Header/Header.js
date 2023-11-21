@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -76,6 +76,7 @@ const userMenu = [
 ];
 
 function Header() {
+    const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
     const { auth } = useAuth();
     // Search context
@@ -107,6 +108,10 @@ function Header() {
         e.preventDefault();
         // Search context
         setKeyword(searchKeyword.trim());
+        setSearchParams((prev) => {
+            prev.set('keyword', searchKeyword.trim());
+            return prev;
+        });
     }
 
     return (
