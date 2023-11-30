@@ -12,9 +12,10 @@ import UnauthorizedPage from './pages/UnauthorizedPage';
 
 // Admin pages
 import PendingPage from './pages/Admin/PendingPage';
-
+import AccountManagementPage from './pages/Admin/AccountManagementPage';
 import RequireAuth from './components/RequireAuth';
 import Logout from './components/Logout';
+import Profile from './pages/ProfilePage/ProfilePage';
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,17 @@ const router = createBrowserRouter([
             {
                 path: 'admin/pending',
                 element: <PendingPage />,
+                
+            },
+            {
+                path: 'admin/accountmanage',
+                element: <AccountManagementPage />,
+                
+            },
+            {
+                path: 'profile',
+                element: < Profile/>,
+                
             },
         ],
     },
