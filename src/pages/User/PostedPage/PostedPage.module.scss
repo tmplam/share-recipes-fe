@@ -1,0 +1,95 @@
+.wrapper {
+    margin-top: calc(var(--header-height) + 20px);
+    margin-bottom: 20px;
+}
+
+.title {
+    text-align: center;
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: var(--green);
+}
+
+.main {
+    border: 2px solid var(--green);
+    padding: 12px 20px;
+    border-radius: var(--small-radius);
+}
+
+.control {
+    display: flex;
+    justify-content: space-between;
+}
+
+.search {
+    width: 300px;
+    height: 36px;
+    display: flex;
+    padding-left: 12px;
+    background-color: var(--white);
+    border-radius: 6px;
+    border: 1.5px solid transparent;
+
+    input {
+        flex: 1;
+        height: 100%;
+        padding-right: 12px;
+        color: var(--text-color);
+        font-size: 1.6rem;
+        caret-color: var(--primary);
+        background-color: transparent;
+        font-family: var(--font-family);
+    }
+
+    &:focus-within {
+        border-color: var(--green);
+    }
+
+    .search-btn {
+        background-color: transparent;
+        border-top-right-radius: var(--small-radius);
+        border-bottom-right-radius: var(--small-radius);
+        color: var(--grey-text);
+        width: 38px;
+
+        &:hover {
+            background-color: rgba(110, 255, 13, 0.1);
+            color: var(--green);
+            cursor: pointer;
+        }
+    }
+
+    @media screen and (max-width: 767.5px) {
+        width: 200px;
+
+        input {
+            padding-right: 0;
+            width: 20px;
+        }
+    }
+}
+
+.filter-control {
+    // margin-left: 12px;
+}
+
+.filter-label {
+    margin-right: 8px;
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+
+.filter-select {
+    border-radius: var(--small-radius);
+    width: 140px;
+    height: 32px;
+    outline: none;
+    border: none;
+}
+
+// Pagination
+.pagination-wrapper {
+    margin-top: 12px;
+    margin-bottom: 4px;
+    text-align: end;
+}

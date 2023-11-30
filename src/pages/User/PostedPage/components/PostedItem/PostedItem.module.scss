@@ -1,0 +1,94 @@
+.wrapper {
+    display: block;
+    margin-top: 10px;
+    aspect-ratio: 4 / 3;
+    background-size: cover;
+    text-decoration: none;
+    color: var(--white);
+    text-shadow: 1px 0px 1px #2e2e2e;
+    border-radius: 4px;
+    transition: all ease-in-out 0.1s;
+
+    @media screen and (max-width: 767.5px) {
+        aspect-ratio: 4 / 2.4;
+    }
+
+    &:hover {
+        position: relative;
+        transform: scale(1.04);
+    }
+}
+
+.inner-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &:hover .delete-btn {
+        display: inline-block;
+    }
+}
+
+.head {
+    margin: 10px 6px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.control {
+    display: flex;
+}
+
+.edit-btn {
+    background-color: rgba(40, 97, 255, 0.6);
+    width: 40px;
+    border-color: transparent;
+    color: var(--white);
+    border-radius: var(--small-radius);
+    padding: 2px 8px;
+    margin-left: 4px;
+
+    &:hover {
+        background-color: rgba(40, 97, 255, 0.9);
+    }
+}
+
+.delete-btn {
+    background-color: rgba(255, 69, 69, 0.6);
+    width: 40px;
+    border-color: transparent;
+    color: var(--white);
+    border-radius: var(--small-radius);
+    padding: 2px 8px;
+    margin-left: 4px;
+
+    &:hover {
+        background-color: rgba(255, 0, 0, 0.9);
+    }
+}
+
+.hidden-btn {
+    font-size: 2rem;
+    background-color: rgba(237, 237, 237, 0.4);
+    box-shadow: 2px 2px 1px #d3c9c9;
+    border-radius: var(--small-radius);
+    padding: 2px 8px;
+}
+
+.hidden-icon {
+    text-shadow: 2px 2px 5px red;
+}
+
+.name {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recipe-info {
+    margin: 0 6px;
+}

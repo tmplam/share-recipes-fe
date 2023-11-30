@@ -46,22 +46,18 @@
     top: 5%;
     left: 5%;
     cursor: pointer;
-    padding: 0;
-    min-width: 0;
     width: 30px;
     height: 30px;
-    text-align: center;
     color: var(--grey-text);
     font-size: 1.8rem;
     background-color: #fff;
     border-radius: 50%;
-    display: inline;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.favourite-btn:hover {
-    color: #d74f4f;
-}
-
+.favourite-btn:hover,
 .favourite-btn.active {
     color: #d74f4f;
 }

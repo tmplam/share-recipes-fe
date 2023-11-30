@@ -78,7 +78,13 @@ function FavouritePage() {
             .then((response) => {
                 const data = response.data;
                 toast.success(data.message);
-                setFavouriteList((prev) => prev.filter((recipe) => recipe.recipeid !== recipeId));
+                if (favouriteList.length === 1 && page > 1) {
+                    setPage(page - 1);
+                } else {
+                    setFavouriteList((prev) =>
+                        prev.filter((recipe) => recipe.recipeid !== recipeId),
+                    );
+                }
             })
             .catch((err) => {
                 toast.error(err.response.data.message);

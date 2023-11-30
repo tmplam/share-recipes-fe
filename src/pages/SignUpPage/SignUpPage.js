@@ -9,8 +9,7 @@ import styles from './SignUpPage.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 import useAuth from '~/hooks/useAuth';
-
-import axios from '~/utils/api';
+import { register } from '~/services/authService';
 
 const cx = classNames.bind(styles);
 
@@ -87,26 +86,7 @@ function SignUp() {
                 setSuccess(true);
                 setIsSubmitting(true);
                 // HANDLE SIGN UP
-                const response = await axios.post(
-                    'auth/register',
-                    {
-                        username,
-                        password: pwd,
-                    },
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                    },
-                );
-
-                const data = response.data;
-
-                const expiration = new Date();
-                expiration.setHours(expiration.getHours() + 1);
-                const authInfo = {
-                    token: data.accessToken,
-                    roles: data.role,
-                    expiration: expiration.toString(),
-                };
+                const authInfo = await register(username, pwd);
 
                 setAuth(authInfo);
                 localStorage.setItem('authInfo', JSON.stringify(authInfo));

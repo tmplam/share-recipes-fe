@@ -8,6 +8,7 @@ import {
     faLayerGroup,
     faArrowRightFromBracket,
     faListCheck,
+    faChartLine,
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faHeart,
@@ -44,6 +45,11 @@ const adminMenu = [
         title: 'Danh sách chờ',
         to: '/admin/pending',
     },
+    {
+        icon: <FontAwesomeIcon icon={faChartLine} />,
+        title: 'Thống kê',
+        to: '/admin/statistics',
+    },
 ];
 
 const userMenu = [
@@ -60,7 +66,7 @@ const userMenu = [
     {
         icon: <FontAwesomeIcon icon={faBookmark} />,
         title: 'Đã đăng',
-        to: '/recipes/shared',
+        to: '/recipes/posted',
     },
     {
         icon: <FontAwesomeIcon icon={faHeart} />,
@@ -101,6 +107,8 @@ function Header() {
                     // console.log(error);
                 });
         }
+
+        setKeyword(searchParams.get('keyword') || '');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

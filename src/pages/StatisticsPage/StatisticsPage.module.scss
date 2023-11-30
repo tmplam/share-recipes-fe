@@ -1,0 +1,32 @@
+.wrapper {
+    padding-top: calc(var(--header-height) + 8px);
+}
+
+.title {
+    text-align: center;
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 12px;
+}
+
+.filter-control {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-label {
+    margin-right: 8px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.filter-select {
+    border-radius: var(--small-radius);
+    width: 160px;
+    height: 32px;
+    outline: none;
+    border: none;
+}

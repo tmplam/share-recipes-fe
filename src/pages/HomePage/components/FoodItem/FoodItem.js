@@ -2,14 +2,15 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import Tippy from '@tippyjs/react';
 
 import styles from './FoodItem.module.scss';
-import Button from '../../../../components/Button';
 
 const cx = classNames.bind(styles);
 
 function FoodItem({
     recipeid,
+    index,
     name,
     recipeavatar,
     estimatedtime,
@@ -17,14 +18,26 @@ function FoodItem({
     datesubmit,
     description,
     reviews,
+    isfavourite,
+    onAddToFavourite,
 }) {
+    function handleAddToFavourite(e) {
+        e.preventDefault();
+        onAddToFavourite(recipeid, index, isfavourite);
+    }
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('image-wrapper')}>
                 <img className={cx('image')} src={recipeavatar} alt="Food" />
-                <Button className={cx('favourite-btn')} title="Add to favourite">
-                    <FontAwesomeIcon icon={faHeart} />
-                </Button>
+                <Tippy delay={[0, 50]} content="Yêu thích" placement="auto">
+                    <button
+                        onClick={handleAddToFavourite}
+                        className={cx('favourite-btn', { active: isfavourite })}
+                    >
+                        <FontAwesomeIcon icon={faHeart} />
+                    </button>
+                </Tippy>
             </div>
 
             <div className={cx('info')}>

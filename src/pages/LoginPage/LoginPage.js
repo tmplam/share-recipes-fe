@@ -5,11 +5,11 @@ import { faUser, faKey, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 
-import axios from '~/utils/api';
 import styles from './LoginPage.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 import useAuth from '~/hooks/useAuth';
+import { login } from '~/services/authService';
 
 const cx = classNames.bind(styles);
 
@@ -37,22 +37,8 @@ function Login() {
         try {
             setIsSubmitting(true);
             setSuccess(true);
-            const response = await axios.post(
-                'auth/login',
-                { username, password: pwd },
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                },
-            );
-            const data = response.data;
 
-            const expiration = new Date();
-            expiration.setHours(expiration.getHours() + 1);
-            const authInfo = {
-                token: data.accessToken,
-                roles: data.roles,
-                expiration: expiration.toString(),
-            };
+            const authInfo = await login(username, pwd);
 
             setAuth(authInfo);
             localStorage.setItem('authInfo', JSON.stringify(authInfo));

@@ -2,15 +2,20 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import MainLayout from './layouts/MainLayout';
 
-// Regular user pages
+// Guess pages
 import HomePage from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
 import Login from './pages/LoginPage';
 import SignUp from './pages/SignUpPage';
-import CreateRecipePage from './pages/CreateRecipePage';
-import FavouritePage from './pages/FavourtitePage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import NotFoundPage from './pages/NotFoundPage';
+
+import StatisticsPage from './pages/StatisticsPage';
+
+// Login user pages
+import CreateRecipePage from './pages/User/CreateRecipePage';
+import FavouritePage from './pages/User/FavourtitePage';
+import PostedPage from './pages/User/PostedPage';
 
 // Admin pages
 import PendingPage from './pages/Admin/PendingPage';
@@ -44,6 +49,10 @@ const router = createBrowserRouter([
                                 path: 'favourite',
                                 element: <FavouritePage />,
                             },
+                            {
+                                path: 'posted',
+                                element: <PostedPage />,
+                            },
                         ],
                     },
                 ],
@@ -68,6 +77,10 @@ const router = createBrowserRouter([
             {
                 path: 'admin/pending',
                 element: <PendingPage />,
+            },
+            {
+                path: 'admin/statistics',
+                element: <StatisticsPage />,
             },
         ],
     },

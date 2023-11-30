@@ -1,6 +1,8 @@
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { useSearchParams } from 'react-router-dom';
 
 import styles from './HomePage.module.scss';
 import FoodItem from '~/pages/HomePage/components/FoodItem';
@@ -9,11 +11,12 @@ import images from '~/assets/images';
 import axios from '~/utils/api';
 // Search context
 import useSearch from '~/hooks/useSearch';
-import { useSearchParams } from 'react-router-dom';
+import useAuth from '~/hooks/useAuth';
 
 const cx = classNames.bind(styles);
 
 function HomePage() {
+    const { auth } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [page, setPage] = useState(() => {
@@ -44,6 +47,11 @@ function HomePage() {
         axios
             .get(
                 `recipes?category=${category}&page=${page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
+                {
+                    headers: {
+                        Authorization: auth?.token,
+                    },
+                },
             )
             .then((response) => {
                 const data = response.data;
@@ -55,7 +63,7 @@ function HomePage() {
                 // console.log(err);
             });
         setIsloading(false);
-    }, [keyword, page, category, sort]);
+    }, [keyword, page, category, sort, auth]);
 
     useEffect(() => {
         axios
@@ -67,6 +75,7 @@ function HomePage() {
             .catch((err) => {
                 // console.log(err);
             });
+
         axios
             .get(`recipes/count`)
             .then((response) => {
@@ -100,6 +109,52 @@ function HomePage() {
             prev.set('page', page);
             return prev;
         });
+    }
+
+    function handleAddToFavourite(recipeid, index, isfavourite) {
+        if (isfavourite) {
+            axios
+                .delete(`users/favourites/${recipeid}`, {
+                    headers: {
+                        Authorization: auth?.token,
+                    },
+                })
+                .then((response) => {
+                    const data = response.data;
+                    toast.success(data.message);
+                    setRecipeList((prev) => {
+                        prev[index].isfavourite = !isfavourite;
+                        return [...prev];
+                    });
+                })
+                .catch((err) => {
+                    toast.error(err.response.data.message);
+                });
+        } else {
+            axios
+                .post(
+                    `users/favourites`,
+                    {
+                        recipe: recipeid,
+                    },
+                    {
+                        headers: {
+                            Authorization: auth?.token,
+                        },
+                    },
+                )
+                .then((response) => {
+                    const data = response.data;
+                    toast.success(data.message);
+                    setRecipeList((prev) => {
+                        prev[index].isfavourite = !isfavourite;
+                        return [...prev];
+                    });
+                })
+                .catch((err) => {
+                    toast.error(err.response.data.message);
+                });
+        }
     }
 
     return (
@@ -170,9 +225,13 @@ function HomePage() {
                     {isLoading ? (
                         <Spinner animation="grow" variant="success" />
                     ) : (
-                        recipeList.map((recipe) => (
+                        recipeList.map((recipe, index) => (
                             <Col xs={6} md={4} lg={3} key={recipe.recipeid}>
-                                <FoodItem {...recipe} />
+                                <FoodItem
+                                    index={index}
+                                    {...recipe}
+                                    onAddToFavourite={handleAddToFavourite}
+                                />
                             </Col>
                         ))
                     )}
