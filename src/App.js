@@ -19,9 +19,10 @@ import PostedPage from './pages/User/PostedPage';
 
 // Admin pages
 import PendingPage from './pages/Admin/PendingPage';
-
+import AccountManagementPage from './pages/Admin/AccountManagementPage';
 import RequireAuth from './components/RequireAuth';
 import Logout from './components/Logout';
+import Profile from './pages/User/ProfilePage/ProfilePage';
 
 const router = createBrowserRouter([
     {
@@ -77,6 +78,14 @@ const router = createBrowserRouter([
             {
                 path: 'admin/pending',
                 element: <PendingPage />,
+            },
+            {
+                path: 'admin/manage-users',
+                element: <AccountManagementPage />,
+            },
+            {
+                path: 'profile',
+                element: <Profile />,
             },
             {
                 path: 'admin/statistics',

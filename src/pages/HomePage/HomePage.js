@@ -44,12 +44,13 @@ function HomePage() {
 
     useEffect(() => {
         setIsloading(true);
+        console.log(auth?.token);
         axios
             .get(
                 `recipes?category=${category}&page=${page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
                 {
                     headers: {
-                        Authorization: auth?.token,
+                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
                     },
                 },
             )
@@ -114,7 +115,7 @@ function HomePage() {
     function handleAddToFavourite(recipeid, index, isfavourite) {
         if (isfavourite) {
             axios
-                .delete(`users/favourites/${recipeid}`, {
+                .delete(`user/favourites/${recipeid}`, {
                     headers: {
                         Authorization: auth?.token,
                     },
@@ -133,7 +134,7 @@ function HomePage() {
         } else {
             axios
                 .post(
-                    `users/favourites`,
+                    `user/favourites`,
                     {
                         recipe: recipeid,
                     },

@@ -56,7 +56,7 @@ const userMenu = [
     {
         icon: <FontAwesomeIcon icon={faUser} />,
         title: 'Cá nhân',
-        to: '/',
+        to: '/profile',
     },
     {
         icon: <FontAwesomeIcon icon={faShareFromSquare} />,
@@ -93,7 +93,7 @@ function Header() {
     useEffect(() => {
         if (auth?.token && auth?.token !== 'EXPIRED') {
             axios
-                .get('users/profile', {
+                .get('user/profile', {
                     headers: {
                         Authorization: `${auth.token}`,
                         'Content-Type': 'application/json',

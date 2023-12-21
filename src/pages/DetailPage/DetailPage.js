@@ -62,7 +62,7 @@ function DetailPage() {
     async function handleAddToFavourite(e) {
         axios
             .post(
-                `users/favourites`,
+                `user/favourites`,
                 {
                     recipe: recipeId,
                 },

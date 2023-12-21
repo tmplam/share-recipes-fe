@@ -29,7 +29,7 @@ function FavouritePage() {
     useEffect(() => {
         axios
             .get(
-                `/users/favourites?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
+                `/user/favourites?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
                 {
                     headers: {
                         Authorization: auth.token,
@@ -70,7 +70,7 @@ function FavouritePage() {
 
     function handleDeleteFavourite(recipeId) {
         axios
-            .delete(`users/favourites/${recipeId}`, {
+            .delete(`user/favourites/${recipeId}`, {
                 headers: {
                     Authorization: auth.token,
                 },
