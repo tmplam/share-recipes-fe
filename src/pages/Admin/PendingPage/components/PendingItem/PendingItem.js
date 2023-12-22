@@ -9,18 +9,18 @@ import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
-function PendingItem({ name, description, recipeavatar }) {
+function PendingItem({ recipeid, name, description, recipeavatar }) {
     return (
         <div className={cx('wrapper')}>
             <Tippy delay={[0, 50]} content="Xem chi tiết" placement="auto">
-                <Link className={cx('image-wrapper')}>
+                <Link className={cx('image-wrapper')} to={`/admin/pending/${recipeid}`}>
                     <img className={cx('image')} src={recipeavatar} alt={name} />
                 </Link>
             </Tippy>
 
             <div className={cx('info')}>
                 <p className={cx('name')}>{name} </p>
-                <p className={cx('des')}> {description} </p>
+                <div className={cx('des')} dangerouslySetInnerHTML={{ __html: description }} />
             </div>
 
             <div className={cx('btn-group')}>

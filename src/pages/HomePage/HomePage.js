@@ -44,7 +44,6 @@ function HomePage() {
 
     useEffect(() => {
         setIsloading(true);
-        console.log(auth?.token);
         axios
             .get(
                 `recipes?category=${category}&page=${page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,

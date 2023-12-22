@@ -1,6 +1,5 @@
 import classNames from 'classnames/bind';
 import { Container, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { useTable } from 'react-table';
 import styles from './AccountManagementPage.module.scss';

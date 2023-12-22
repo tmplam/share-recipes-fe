@@ -33,6 +33,8 @@
     border-radius: var(--small-radius);
 }
 
+
+
 .ingre-wrapper,
 .guid-wrapper {
     padding: 12px;
@@ -49,47 +51,4 @@
 
 .title ~ div ul {
     margin-left: 50px;
-}
-
-// ACTION
-.action {
-    display: flex;
-    justify-content: space-between;
-    margin: 12px 0;
-}
-
-.save p,
-.rating p {
-    font-size: 2rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.stars {
-    margin-right: 6px;
-    color: var(--grey-text);
-    font-size: 26px;
-}
-
-// COMMENT
-.input-group {
-    margin: 12px 0;
-    display: flex;
-    align-items: center;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.cmt-input {
-    margin-left: 8px;
-    border-radius: 2000px;
-    height: 40px;
-    min-width: 300px;
-    padding: 4px 12px;
-    font-size: 1.6rem;
 }

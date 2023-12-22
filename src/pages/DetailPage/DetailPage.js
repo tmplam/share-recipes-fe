@@ -88,33 +88,45 @@ function DetailPage() {
                     <h1 className={cx('name')}>{recipe.name}</h1>
                     <div className={cx('detail')}>
                         <div className={cx('desc')}>
-                            <img className={cx('food-img')} src={recipe.recipeavatar} alt="anh" />
+                            <img
+                                className={`${cx('food-img')} img-thumbnail`}
+                                src={recipe.recipeavatar}
+                                alt="food"
+                            />
                             <div className={cx('desc-detail')}>
                                 <div>
                                     <h2 className={cx('title')}>
                                         <FontAwesomeIcon icon={faNewspaper} /> Mô tả:
                                     </h2>
-                                    <p>{recipe.description}</p>
+                                    <div dangerouslySetInnerHTML={{ __html: recipe.description }} />
                                 </div>
-                                <p>
-                                    <strong style={{ fontWeight: 600, fontSize: 2.2 + 'rem' }}>
-                                        Loại:{' '}
-                                    </strong>{' '}
-                                    {recipe.category}
-                                </p>
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <p>
+                                        <strong style={{ fontWeight: 600, fontSize: 2.2 + 'rem' }}>
+                                            Loại:{' '}
+                                        </strong>{' '}
+                                        {recipe.category}
+                                    </p>
+                                    <p>
+                                        <strong style={{ fontWeight: 600, fontSize: 1.8 + 'rem' }}>
+                                            Thời gian:{' '}
+                                        </strong>{' '}
+                                        {recipe.estimatedtime} phút
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div className={cx('ingre-wrapper')}>
                             <h2 className={cx('title')}>
                                 <FontAwesomeIcon icon={faPlateWheat} /> Nguyên liệu:
                             </h2>
-                            <div>{recipe.ingredients}</div>
+                            <div dangerouslySetInnerHTML={{ __html: recipe.ingredients }} />
                         </div>
                         <div className={cx('guid-wrapper')}>
                             <h2 className={cx('title')}>
                                 <FontAwesomeIcon icon={faUtensils} /> Hướng dẫn:
                             </h2>
-                            <div>{recipe.instruction}</div>
+                            <div dangerouslySetInnerHTML={{ __html: recipe.instruction }} />
                         </div>
                     </div>
                 </div>

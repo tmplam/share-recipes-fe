@@ -16,13 +16,15 @@ import StatisticsPage from './pages/StatisticsPage';
 import CreateRecipePage from './pages/User/CreateRecipePage';
 import FavouritePage from './pages/User/FavourtitePage';
 import PostedPage from './pages/User/PostedPage';
+import Profile from './pages/User/ProfilePage/ProfilePage';
 
 // Admin pages
 import PendingPage from './pages/Admin/PendingPage';
+import PendingDetailPage from './pages/Admin/PendingDetailPage';
 import AccountManagementPage from './pages/Admin/AccountManagementPage';
+
 import RequireAuth from './components/RequireAuth';
 import Logout from './components/Logout';
-import Profile from './pages/User/ProfilePage/ProfilePage';
 
 const router = createBrowserRouter([
     {
@@ -32,29 +34,50 @@ const router = createBrowserRouter([
         children: [
             { index: true, element: <HomePage /> },
             {
-                path: 'recipes',
+                path: '',
+                element: <RequireAuth all />,
                 children: [
                     {
-                        path: ':recipeId',
-                        element: <DetailPage />,
+                        path: 'recipes/create',
+                        element: <CreateRecipePage />,
                     },
                     {
-                        path: '',
-                        element: <RequireAuth all />,
-                        children: [
-                            {
-                                path: 'create',
-                                element: <CreateRecipePage />,
-                            },
-                            {
-                                path: 'favourite',
-                                element: <FavouritePage />,
-                            },
-                            {
-                                path: 'posted',
-                                element: <PostedPage />,
-                            },
-                        ],
+                        path: 'recipes/favourite',
+                        element: <FavouritePage />,
+                    },
+                    {
+                        path: 'recipes/posted',
+                        element: <PostedPage />,
+                    },
+                    {
+                        path: 'profile',
+                        element: <Profile />,
+                    },
+                ],
+            },
+            {
+                path: 'recipes/:recipeId',
+                element: <DetailPage />,
+            },
+            {
+                path: '',
+                element: <RequireAuth allowedRoles={['Admin', 'SuperAdmin']} />,
+                children: [
+                    {
+                        path: 'admin/pending',
+                        element: <PendingPage />,
+                    },
+                    {
+                        path: 'admin/pending/:recipeId',
+                        element: <PendingDetailPage />,
+                    },
+                    {
+                        path: 'admin/manage-users',
+                        element: <AccountManagementPage />,
+                    },
+                    {
+                        path: 'admin/statistics',
+                        element: <StatisticsPage />,
                     },
                 ],
             },
@@ -74,22 +97,6 @@ const router = createBrowserRouter([
             {
                 path: 'unauthorized',
                 element: <UnauthorizedPage />,
-            },
-            {
-                path: 'admin/pending',
-                element: <PendingPage />,
-            },
-            {
-                path: 'admin/manage-users',
-                element: <AccountManagementPage />,
-            },
-            {
-                path: 'profile',
-                element: <Profile />,
-            },
-            {
-                path: 'admin/statistics',
-                element: <StatisticsPage />,
             },
         ],
     },

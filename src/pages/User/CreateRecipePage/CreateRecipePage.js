@@ -70,7 +70,7 @@ function AddRecipePage() {
                 setCategoryList(data.data);
             })
             .catch((err) => {
-                // console.log(err);
+                console.error(err.message);
             });
     }, []);
 
@@ -113,7 +113,7 @@ function AddRecipePage() {
         // Check description
         if (descRef.current.plugins.wordcount.getCount() < 20) {
             descRef.current.targetElm.parentNode.querySelector(`.${cx('error')}`).innerText =
-                'Vui lòng nhập hơn 20 kí tự!';
+                'Vui lòng nhập hơn 20 từ!';
             valid = false;
         } else {
             formData.append('description', descRef.current.getContent());
@@ -123,7 +123,7 @@ function AddRecipePage() {
         // Check ingredients
         if (ingreRef.current.plugins.wordcount.getCount() < 20) {
             ingreRef.current.targetElm.parentNode.querySelector(`.${cx('error')}`).innerText =
-                'Vui lòng nhập hơn 20 kí tự!';
+                'Vui lòng nhập hơn 20 từ!';
             valid = false;
         } else {
             formData.append('ingredients', ingreRef.current.getContent());
@@ -133,7 +133,7 @@ function AddRecipePage() {
         // Check instruction
         if (instructRef.current.plugins.wordcount.getCount() < 20) {
             instructRef.current.targetElm.parentNode.querySelector(`.${cx('error')}`).innerText =
-                'Vui lòng nhập hơn 20 kí tự!';
+                'Vui lòng nhập hơn 20 từ!';
             valid = false;
         } else {
             formData.append('instruction', instructRef.current.getContent());
@@ -147,16 +147,15 @@ function AddRecipePage() {
                 'Vui lòng nhập số!';
             valid = false;
         } else {
-            formData.append('name', timeRef.current.value.trim());
+            formData.append('estimatedTime', timeRef.current.value.trim());
             timeRef.current.parentNode.querySelector(`.${cx('error')}`).innerText = '';
         }
 
         if (valid) {
             try {
-                const response = await axios.post('/upload', formData, {
+                const response = await axios.post('/user/recipes', formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: auth.token,
+                        Authorization: auth?.token,
                     },
                 });
 
@@ -288,7 +287,7 @@ function AddRecipePage() {
                                         autoComplete="false"
                                         className={cx('form-control')}
                                         placeholder="Thời gian nấu"
-                                        type="text"
+                                        type="number"
                                         ref={timeRef}
                                     />
                                     <span className={cx('error')}></span>
