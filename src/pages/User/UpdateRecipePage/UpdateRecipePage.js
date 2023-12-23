@@ -1,11 +1,12 @@
 import classNames from 'classnames/bind';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Editor } from '@tinymce/tinymce-react';
 
-import styles from './CreateRecipePage.module.scss';
+import styles from './UpdateRecipePage.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 
@@ -50,12 +51,12 @@ const tinyInit = {
         `,
 };
 
-function AddRecipePage() {
+function UpdateRecipePage() {
     const { auth } = useAuth();
+    const [recipe, setRecipe] = useState({});
 
     const nameRef = useRef();
     const categoryRef = useRef();
-    const imageRef = useRef();
     const timeRef = useRef();
 
     const descRef = useRef();
@@ -65,18 +66,41 @@ function AddRecipePage() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [preview, setPreview] = useState();
 
+    let { recipeId } = useParams();
+    useEffect(() => {
+        axios
+            .get(`recipes/${recipeId}`, {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
+            .then((response) => {
+                const recipe = response.data.data;
+                setRecipe(recipe);
+            })
+            .catch((err) => {
+                console.error(err.message);
+            });
+    }, [recipeId, auth]);
+
     const [categoryList, setCategoryList] = useState([]);
     useEffect(() => {
         axios
             .get(`recipe-categories`)
             .then((response) => {
                 const data = response.data;
+                data.data.forEach((item) => {
+                    if (item.name === recipe.category) {
+                        recipe.category = item.categoryid;
+                        categoryRef.current.value = recipe.category;
+                    }
+                });
                 setCategoryList(data.data);
             })
             .catch((err) => {
                 console.error(err.message);
             });
-    }, []);
+    }, [recipe]);
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -103,15 +127,9 @@ function AddRecipePage() {
             categoryRef.current.parentNode.querySelector(`.${cx('error')}`).innerText = '';
         }
 
-        // Check image
-        if (imageRef.current.files.length === 0) {
-            imageRef.current.parentNode.querySelector(`.${cx('error')}`).innerText =
-                'Vui lòng chọn ảnh!';
-            valid = false;
-        } else {
-            formData.append('image', imageRef.current.files[0]);
-            console.log(imageRef.current.files[0]);
-            imageRef.current.parentNode.querySelector(`.${cx('error')}`).innerText = '';
+        // Set image if any
+        if (selectedFile) {
+            formData.append('image', selectedFile);
         }
 
         // Check description
@@ -157,7 +175,7 @@ function AddRecipePage() {
 
         if (valid) {
             try {
-                const response = await axios.post('/user/recipes', formData, {
+                const response = await axios.put(`/user/recipes/${recipeId}`, formData, {
                     headers: {
                         Authorization: auth?.token,
                     },
@@ -220,9 +238,9 @@ function AddRecipePage() {
                             </div>
                         </div>
                         <div className={cx('form-wrapper')}>
-                            <h1 className={cx('form-title')}>CHIA SẺ CÔNG THỨC</h1>
+                            <h1 className={cx('form-title')}>CHỈNH SỬA CÔNG THỨC</h1>
                             <span className={cx('form-subtitle')}>
-                                Chia sẻ niềm vui nấu ăn cho mọi người
+                                Thêm chút muối nếu như công thức của bạn quá nhạt!
                             </span>
                             <form className={cx('form')} spellCheck="false" onSubmit={handleSubmit}>
                                 <div className={cx('form-group')}>
@@ -233,6 +251,7 @@ function AddRecipePage() {
                                         className={cx('form-control')}
                                         type="text"
                                         placeholder="Tên công thức"
+                                        defaultValue={recipe.name}
                                         ref={nameRef}
                                     />
                                     <span className={cx('error')}></span>
@@ -244,7 +263,6 @@ function AddRecipePage() {
                                         id="category"
                                         className={cx('form-control')}
                                         ref={categoryRef}
-                                        defaultValue=""
                                     >
                                         <option value="" disabled>
                                             -- Chọn loại --
@@ -266,20 +284,25 @@ function AddRecipePage() {
                                     <input
                                         id="image"
                                         onChange={onSelectFile}
-                                        ref={imageRef}
                                         className={cx('form-control', 'form-file')}
                                         type="file"
                                         accept="image/*"
                                     />
-                                    <span className={cx('error')}></span>
-                                    {selectedFile && (
+                                    {selectedFile ? (
                                         <img className={cx('old-img')} src={preview} alt="avatar" />
+                                    ) : (
+                                        <img
+                                            className={cx('old-img')}
+                                            src={recipe.recipeavatar}
+                                            alt="avatar"
+                                        />
                                     )}
                                 </div>
 
                                 <div className={cx('form-group')}>
                                     <label>Mô tả</label>
                                     <Editor
+                                        initialValue={recipe.description}
                                         apiKey="e66hvcl6cot54m4i4iv87j73ukdk8ulfp831tjbi0h502kfy"
                                         onInit={(evt, editor) => (descRef.current = editor)}
                                         init={tinyInit}
@@ -290,6 +313,7 @@ function AddRecipePage() {
                                 <div className={cx('form-group')}>
                                     <label>Nguyên liệu</label>
                                     <Editor
+                                        initialValue={recipe.ingredients}
                                         apiKey="e66hvcl6cot54m4i4iv87j73ukdk8ulfp831tjbi0h502kfy"
                                         onInit={(evt, editor) => (ingreRef.current = editor)}
                                         init={tinyInit}
@@ -300,6 +324,7 @@ function AddRecipePage() {
                                 <div className={cx('form-group')}>
                                     <label>Hướng dẫn</label>
                                     <Editor
+                                        initialValue={recipe.instruction}
                                         apiKey="e66hvcl6cot54m4i4iv87j73ukdk8ulfp831tjbi0h502kfy"
                                         onInit={(evt, editor) => (instructRef.current = editor)}
                                         init={tinyInit}
@@ -315,13 +340,14 @@ function AddRecipePage() {
                                         className={cx('form-control')}
                                         placeholder="Thời gian nấu"
                                         type="number"
+                                        defaultValue={recipe.estimatedtime}
                                         ref={timeRef}
                                     />
                                     <span className={cx('error')}></span>
                                 </div>
 
                                 <Button rounded w100 green center type="submit">
-                                    Đăng
+                                    Cập nhật
                                 </Button>
                             </form>
                         </div>
@@ -332,4 +358,4 @@ function AddRecipePage() {
     );
 }
 
-export default AddRecipePage;
+export default UpdateRecipePage;

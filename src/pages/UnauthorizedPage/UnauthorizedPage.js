@@ -1,23 +1,38 @@
 import classNames from 'classnames/bind';
-import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faTwitter, faGooglePlusG } from '@fortawesome/free-brands-svg-icons';
 
 import styles from './UnauthorizedPage.module.scss';
 
-// eslint-disable-next-line no-unused-vars
+import Button from '~/components/Button';
+
 const cx = classNames.bind(styles);
 
 function Unauthorized() {
-    const navigate = useNavigate();
-
-    const goBack = () => navigate(-1);
-
     return (
-        <section style={{ marginTop: '200px' }}>
-            <h1>Unauthorized</h1>
-            <br />
-            <p>You do not have access to the requested page.</p>
-            <div className="flexGrow">
-                <button onClick={goBack}>Go Back</button>
+        <section className={cx('wrapper')}>
+            <div className={cx('notfound')}>
+                <div className={cx('notfound-bg')}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <h1 className={cx('title')}>Oops!</h1>
+                <h2 className={cx('message')}>Lỗi 401 : Không được quyền truy cập!</h2>
+                <Button className={cx('back-btn')} to="/" center green>
+                    Về trang chủ
+                </Button>
+                <div className={cx('notfound-social')}>
+                    <a href="https://www.facebook.com/profile.php?id=100019167581327">
+                        <FontAwesomeIcon icon={faFacebookF} />
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=100019167581327">
+                        <FontAwesomeIcon icon={faTwitter} />
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=100019167581327">
+                        <FontAwesomeIcon icon={faGooglePlusG} />
+                    </a>
+                </div>
             </div>
         </section>
     );

@@ -1,107 +1,163 @@
 import classNames from 'classnames/bind';
-import { Container, Button } from 'react-bootstrap';
-import React from 'react';
-import { useTable } from 'react-table';
-import styles from './AccountManagementPage.module.scss';
+import { useEffect, useRef, useState } from 'react';
+import { Container, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faListCheck } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
+
+import Pagination from '~/components/Pagination';
+import styles from './AccountManagementPage.module.scss';
+import axios from '~/utils/api';
+import useAuth from '~/hooks/useAuth';
 
 const cx = classNames.bind(styles);
 
 function AccountManagementPage() {
-    const COLUMNS = [
-        {
-            Header: 'STT',
-            accessor: 'stt',
-        },
-        {
-            Header: 'Username',
-            accessor: 'username',
-        },
-        {
-            Header: 'Role',
-            accessor: 'role',
-        },
-        {
-            Header: '',
-            accessor: 'action',
-            Cell: ({ row }) => <button className={cx('btn-delete')}>Xoá</button>,
-        },
-    ];
+    const { auth } = useAuth();
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    const per_page = 4;
 
-    const DATA_TABLE = [
-        {
-            stt: '1',
-            username: 'roland123',
-            role: 'user',
-        },
-        {
-            stt: '2',
-            username: 'cheng',
-            role: 'admin',
-        },
-        {
-            stt: '3',
-            username: 'flixer',
-            role: 'user',
-        },
-        {
-            stt: '1',
-            username: 'golden ramsey',
-            role: 'admin',
-        },
-        {
-            stt: '4',
-            username: 'peter parker',
-            role: 'user',
-        },
-        {
-            stt: '5',
-            username: 'superman123',
-            role: 'user',
-        },
-    ];
+    const [category, setCategory] = useState('');
 
-    const tableInstance = useTable({
-        columns: COLUMNS,
-        data: DATA_TABLE,
-    });
+    const [keyword, setKeyword] = useState('');
+    const keywordRef = useRef();
+    const [userList, setUserList] = useState([]);
+    const [categoryList, setCategoryList] = useState([]);
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
+    useEffect(() => {
+        // `/user/favourites?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
+        axios
+            .get(`/users`, {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                console.log(data.data);
+                setUserList(data.data);
+                // setPage(data.page);
+                setTotalPage(10);
+                // setFavouriteList(data.data);
+            })
+            .catch((err) => {
+                // console.error(err);
+            });
+    }, [page, keyword, category, auth]);
+
+    useEffect(() => {
+        axios
+            .get(`recipe-categories`)
+            .then((response) => {
+                const data = response.data;
+                setCategoryList(data.data);
+            })
+            .catch((err) => {
+                toast.error(err?.response?.data?.message | 'Lỗi server!');
+            });
+    }, []);
+
+    function handlePageChange(page) {
+        setPage(page);
+    }
+
+    function handleSubmitSearch(e) {
+        e.preventDefault();
+        setKeyword(keywordRef.current.value);
+    }
+
+    function handleDeleteUser(recipeId) {
+        axios
+            .delete(`user/favourites/${recipeId}`, {
+                headers: {
+                    Authorization: auth.token,
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                toast.success(data.message);
+                // setFavouriteList((prev) => prev.filter((recipe) => recipe.recipeid !== recipeId));
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message);
+            });
+    }
 
     return (
         <Container className={cx('wrapper')}>
             <h1 className={cx('title')}>
-                <FontAwesomeIcon icon={faListCheck} /> Danh Sách Các Tài Khoản
+                Quản lí danh sách người dùng <FontAwesomeIcon icon={faBookOpen} />
             </h1>
-            <div className={cx('btn-create-div')}>
-                <div>
-                    <Button className={cx('btn-create')}>Tạo tài khoản</Button>
+
+            <div className={cx('control')}>
+                <form id="search-form" className={cx('search')} onSubmit={handleSubmitSearch}>
+                    <input
+                        ref={keywordRef}
+                        placeholder="Tìm kiếm ..."
+                        spellCheck={false}
+                        name="search"
+                    />
+                    <button className={cx('search-btn')}>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    </button>
+                </form>
+
+                <div className={cx('filter-control')}>
+                    <label className={cx('filter-label')} htmlFor="category">
+                        Role:
+                    </label>
+
+                    <select
+                        onChange={(e) => setCategory(e.target.value)}
+                        className={cx('filter-select')}
+                        id="category"
+                    >
+                        <option value="all">Tất cả</option>
+                        {categoryList.map((category) => (
+                            <option key={category.categoryid} value={category.categoryid}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
-            <table striped bordered hover {...getTableProps()}>
-                <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                            ))}
-                        </tr>
-                    ))}
+
+            {/* Main content */}
+            <Table className="mt-3" striped bordered hover responsive>
+                <thead className="table-success">
+                    <tr className="table-success">
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>
+                    </tr>
                 </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
+                <tbody>
+                    {userList.map((user, index) => {
                         return (
-                            <tr key={row.id} {...row.getRowProps()}>
-                                {row.cells.map((cell) => (
-                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                ))}
+                            <tr key={user.userid}>
+                                <td>{index + 1}</td>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
+                                <td>{user.roles}</td>
                             </tr>
                         );
                     })}
                 </tbody>
-            </table>
+            </Table>
+
+            {totalPage >= 2 ? (
+                <div className={cx('pagination-wrapper')}>
+                    <Pagination
+                        page={page}
+                        total_page={totalPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            ) : (
+                false
+            )}
         </Container>
     );
 }

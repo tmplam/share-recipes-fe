@@ -29,10 +29,10 @@ function FavouritePage() {
     useEffect(() => {
         axios
             .get(
-                `/user/favourites?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
+                `/user/recipes?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
                 {
                     headers: {
-                        Authorization: auth.token,
+                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
                     },
                 },
             )

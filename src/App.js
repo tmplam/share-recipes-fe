@@ -14,6 +14,7 @@ import StatisticsPage from './pages/StatisticsPage';
 
 // Login user pages
 import CreateRecipePage from './pages/User/CreateRecipePage';
+import UpdateRecipePage from './pages/User/UpdateRecipePage';
 import FavouritePage from './pages/User/FavourtitePage';
 import PostedPage from './pages/User/PostedPage';
 import Profile from './pages/User/ProfilePage/ProfilePage';
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
                     {
                         path: 'recipes/create',
                         element: <CreateRecipePage />,
+                    },
+                    {
+                        path: 'recipes/:recipeId/edit',
+                        element: <UpdateRecipePage />,
                     },
                     {
                         path: 'recipes/favourite',
@@ -72,12 +77,18 @@ const router = createBrowserRouter([
                         element: <PendingDetailPage />,
                     },
                     {
-                        path: 'admin/manage-users',
-                        element: <AccountManagementPage />,
-                    },
-                    {
                         path: 'admin/statistics',
                         element: <StatisticsPage />,
+                    },
+                ],
+            },
+            {
+                path: '',
+                element: <RequireAuth allowedRoles={['SuperAdmin']} />,
+                children: [
+                    {
+                        path: 'admin/manage-users',
+                        element: <AccountManagementPage />,
                     },
                 ],
             },
@@ -93,12 +104,11 @@ const router = createBrowserRouter([
                 path: 'logout',
                 element: <Logout />,
             },
-            // TEST
-            {
-                path: 'unauthorized',
-                element: <UnauthorizedPage />,
-            },
         ],
+    },
+    {
+        path: 'unauthorized',
+        element: <UnauthorizedPage />,
     },
     {
         path: '*',

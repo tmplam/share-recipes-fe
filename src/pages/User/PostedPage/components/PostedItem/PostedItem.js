@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function FavouriteItem({
+function PostedItem({
     recipeid,
     name,
     recipeavatar,
@@ -20,18 +20,12 @@ function FavouriteItem({
     description,
     reviews,
     category,
-    onEdit,
     onDelete,
     onHide,
 }) {
     function handleDelete(e) {
         e.preventDefault();
         onDelete(recipeid);
-    }
-
-    function handleEdit(e) {
-        e.preventDefault();
-        onEdit(recipeid);
     }
 
     function handleHide(e) {
@@ -49,9 +43,9 @@ function FavouriteItem({
                 <div className={cx('head')}>
                     <div className={cx('control')}>
                         <Tippy delay={[0, 50]} content="Sửa" placement="auto">
-                            <button onClick={handleEdit} className={cx('edit-btn')}>
+                            <Link to={`/recipes/${recipeid}/edit`} className={cx('edit-btn')}>
                                 <FontAwesomeIcon icon={faPenToSquare} />
-                            </button>
+                            </Link>
                         </Tippy>
                         <Tippy delay={[0, 50]} content="Xóa" placement="auto">
                             <button onClick={handleDelete} className={cx('delete-btn')}>
@@ -76,4 +70,4 @@ function FavouriteItem({
     );
 }
 
-export default FavouriteItem;
+export default PostedItem;
