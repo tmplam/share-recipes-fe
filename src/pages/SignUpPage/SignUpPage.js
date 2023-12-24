@@ -136,6 +136,7 @@ function SignUp() {
                                             onBlur={(e) => setUsernameFocus(false)}
                                             className={cx('form-control')}
                                             type="text"
+                                            autocomplete="new-password"
                                             placeholder="Username"
                                         />
                                         <FontAwesomeIcon className={cx('icon')} icon={faUser} />
@@ -163,6 +164,7 @@ function SignUp() {
                                             onFocus={(e) => setPwdFocus(true)}
                                             onBlur={(e) => setPwdFocus(false)}
                                             className={cx('form-control')}
+                                            autocomplete="new-password"
                                             type="password"
                                             placeholder="Mật khẩu"
                                         />

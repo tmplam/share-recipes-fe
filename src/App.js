@@ -22,7 +22,8 @@ import Profile from './pages/User/ProfilePage/ProfilePage';
 // Admin pages
 import PendingPage from './pages/Admin/PendingPage';
 import PendingDetailPage from './pages/Admin/PendingDetailPage';
-import AccountManagementPage from './pages/Admin/AccountManagementPage';
+import UserManagementPage from './pages/Admin/UserManagementPage';
+import CreateUserPage from './pages/Admin/CreateUserPage';
 
 import RequireAuth from './components/RequireAuth';
 import Logout from './components/Logout';
@@ -88,7 +89,11 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: 'admin/manage-users',
-                        element: <AccountManagementPage />,
+                        element: <UserManagementPage />,
+                    },
+                    {
+                        path: 'admin/create-user',
+                        element: <CreateUserPage />,
                     },
                 ],
             },

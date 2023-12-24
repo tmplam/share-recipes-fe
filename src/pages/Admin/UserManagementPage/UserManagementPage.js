@@ -2,18 +2,21 @@ import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faUsers, faUserPlus, faLock } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 import Pagination from '~/components/Pagination';
-import styles from './AccountManagementPage.module.scss';
+import styles from './UserManagementPage.module.scss';
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
+import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
 function AccountManagementPage() {
     const { auth } = useAuth();
+    const location = useLocation();
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
     const per_page = 4;
@@ -23,7 +26,7 @@ function AccountManagementPage() {
     const [keyword, setKeyword] = useState('');
     const keywordRef = useRef();
     const [userList, setUserList] = useState([]);
-    const [categoryList, setCategoryList] = useState([]);
+    const [roleList, setRoleList] = useState([]);
 
     useEffect(() => {
         // `/user/favourites?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
@@ -35,7 +38,7 @@ function AccountManagementPage() {
             })
             .then((response) => {
                 const data = response.data;
-                console.log(data.data);
+                // console.log(data.data);
                 setUserList(data.data);
                 // setPage(data.page);
                 setTotalPage(10);
@@ -48,10 +51,10 @@ function AccountManagementPage() {
 
     useEffect(() => {
         axios
-            .get(`recipe-categories`)
+            .get(`roles`)
             .then((response) => {
                 const data = response.data;
-                setCategoryList(data.data);
+                setRoleList(data.data);
             })
             .catch((err) => {
                 toast.error(err?.response?.data?.message | 'Lỗi server!');
@@ -67,7 +70,7 @@ function AccountManagementPage() {
         setKeyword(keywordRef.current.value);
     }
 
-    function handleDeleteUser(recipeId) {
+    function handleLockUser(recipeId) {
         axios
             .delete(`user/favourites/${recipeId}`, {
                 headers: {
@@ -86,9 +89,11 @@ function AccountManagementPage() {
 
     return (
         <Container className={cx('wrapper')}>
-            <h1 className={cx('title')}>
-                Quản lí danh sách người dùng <FontAwesomeIcon icon={faBookOpen} />
-            </h1>
+            <div className={cx('title-wrapper')}>
+                <h1 className={cx('title')}>
+                    Quản lí danh sách người dùng <FontAwesomeIcon icon={faUsers} />
+                </h1>
+            </div>
 
             <div className={cx('control')}>
                 <form id="search-form" className={cx('search')} onSubmit={handleSubmitSearch}>
@@ -103,34 +108,47 @@ function AccountManagementPage() {
                     </button>
                 </form>
 
-                <div className={cx('filter-control')}>
-                    <label className={cx('filter-label')} htmlFor="category">
-                        Role:
-                    </label>
+                <div className="d-flex align-items-center">
+                    <div className={cx('filter-control')}>
+                        <label className={cx('filter-label')} htmlFor="category">
+                            Role:
+                        </label>
 
-                    <select
-                        onChange={(e) => setCategory(e.target.value)}
-                        className={cx('filter-select')}
-                        id="category"
+                        <select
+                            onChange={(e) => setCategory(e.target.value)}
+                            className={cx('filter-select')}
+                            id="category"
+                        >
+                            <option value="all">Tất cả</option>
+                            {roleList.map((role) => (
+                                <option key={role.roleid} value={role.roleid}>
+                                    {role.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <Button
+                        to={'/admin/create-user'}
+                        center
+                        green
+                        state={{ from: location }}
+                        rightIcon={<FontAwesomeIcon icon={faUserPlus} />}
                     >
-                        <option value="all">Tất cả</option>
-                        {categoryList.map((category) => (
-                            <option key={category.categoryid} value={category.categoryid}>
-                                {category.name}
-                            </option>
-                        ))}
-                    </select>
+                        Thêm
+                    </Button>
                 </div>
             </div>
 
             {/* Main content */}
-            <Table className="mt-3" striped bordered hover responsive>
+            <Table striped bordered hover responsive>
                 <thead className="table-success">
                     <tr className="table-success">
                         <th>#</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Username</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -141,6 +159,11 @@ function AccountManagementPage() {
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.roles}</td>
+                                <td className="text-center">
+                                    <button className={cx('delete-btn')}>
+                                        Lock <FontAwesomeIcon icon={faLock} />
+                                    </button>
+                                </td>
                             </tr>
                         );
                     })}
