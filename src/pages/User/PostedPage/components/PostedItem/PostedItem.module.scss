@@ -1,3 +1,7 @@
+.outer-wrapper {
+    position: relative;
+}
+
 .wrapper {
     display: block;
     margin-top: 10px;
@@ -24,7 +28,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     &:hover .delete-btn {
         display: inline-block;
@@ -32,9 +36,12 @@
 }
 
 .head {
-    margin: 10px 6px 0;
+    width: 100%;
+    padding: 10px 6px 0 6px;
     display: flex;
     justify-content: space-between;
+    position: absolute;
+    top: 0;
 }
 
 .control {
@@ -51,7 +58,7 @@
     color: var(--white);
     border-radius: var(--small-radius);
     padding: 2px 8px;
-    margin-left: 4px;
+    // margin-left: 4px;
 
     &:hover {
         background-color: rgba(40, 97, 255, 0.9);
