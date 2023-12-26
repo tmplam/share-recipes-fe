@@ -1,59 +1,75 @@
 import classNames from 'classnames/bind';
-import { faStar, faHeart, faPlateWheat, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faPlateWheat, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { faNewspaper } from '@fortawesome/free-regular-svg-icons';
 import { Container } from 'react-bootstrap';
+
+import { Rating } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
 import CommentItem from './components/CommentItem';
-import Button from '~/components/Button';
 import styles from './DetailPage.module.scss';
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
 
 const cx = classNames.bind(styles);
 
-const COMMENTS = [
-    {
-        avatar: 'https://th.bing.com/th/id/OIP.3XUBe-nY31d3nFjbDDCgkAHaHa?pid=ImgDet&rs=1',
-        username: 'Trần Mỹ Phú Lâm',
-        content: 'Ngon nhứt cái nách!',
-    },
-    {
-        avatar: 'https://i.pinimg.com/originals/bb/9c/12/bb9c123bccaca4ae498c97bfa615cc58.jpg',
-        username: 'Nguyễn Võ Nhật Huy',
-        content: 'Tuyệt vời luôn bạn ơi!',
-    },
-    {
-        avatar: 'https://i.pinimg.com/originals/6f/a1/cb/6fa1cbfc4942859eb10c499465383efe.png',
-        username: 'Nguyễn Hưng Yên',
-        content: 'Chỉ cái đ*ll gì nấu é* được phí thời gian vl',
-    },
-    {
-        avatar: 'https://th.bing.com/th/id/OIP.Uty5ZuOyeRdCfnvtxUJnmwHaE3?pid=ImgDet&rs=1',
-        username: 'Vương Huỳnh Khải',
-        content: 'Good recipe! Vote 5 stars!',
-    },
-    {
-        avatar: 'https://vignette3.wikia.nocookie.net/detective-conan/images/5/5f/Vodka.jpg/revision/latest?cb=20110629124627&path-prefix=es',
-        username: 'Tạ Ngọc Duy Khiêm',
-        content: 'Dỡ vãi l*n!',
-    },
-];
-
 function DetailPage() {
     const { auth } = useAuth();
     let { recipeId } = useParams();
     const [recipe, setRecipe] = useState({});
+    const [comments, setComments] = useState([]);
+
+    const [avatar, setAvatar] = useState('');
+    const [averagerating, setAverageRating] = useState(0);
 
     useEffect(() => {
         axios
-            .get(`recipes/${recipeId}`)
+            .get(`/user/profile`, {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
             .then((response) => {
-                setRecipe(response?.data.data);
+                const profile = response.data.data;
+                setAvatar(profile.avatar);
+            })
+            .catch((err) => {
+                // console.error(err);
+            });
+    }, [auth?.token]);
+
+    useEffect(() => {
+        axios
+            .get(`recipes/${recipeId}`, {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
+            .then((response) => {
+                let avg = Number.parseFloat(response.data.data.averagerating);
+                if (Number.isNaN(avg)) avg = 0;
+                else avg = avg.toFixed(1);
+
+                setAverageRating(avg);
+                setRecipe({ ...response?.data.data, averagerating: avg });
+            })
+            .catch((err) => {});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get(`/comments/${recipeId}?sort_by=oldest`)
+            .then((response) => {
+                const info = response.data;
+                setComments(info.data);
             })
             .catch((err) => {});
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,16 +84,120 @@ function DetailPage() {
                 },
                 {
                     headers: {
-                        Authorization: auth.token,
+                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
                     },
                 },
             )
             .then((response) => {
                 const data = response.data;
                 toast.success(data.message);
+                setRecipe((prev) => ({ ...prev, isfavourite: true }));
             })
             .catch((err) => {
                 toast.error(err.response.data.message);
+            });
+    }
+
+    function handleDeleteFavourite() {
+        axios
+            .delete(`user/favourites/${recipe.recipeid}`, {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                toast.success(data.message);
+                setRecipe((prev) => ({ ...prev, isfavourite: false }));
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message);
+            });
+    }
+
+    const ratingChanged = (newRating) => {
+        setAverageRating(newRating);
+    };
+
+    const [comment, setComment] = useState('');
+    function handleComment(e) {
+        e.preventDefault();
+
+        axios
+            .post(
+                `/comments/add/${recipeId}`,
+                { content: comment },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                    },
+                },
+            )
+            .then((response) => {
+                // Reload all comments
+                axios
+                    .get(`/comments/${recipeId}?sort_by=oldest`)
+                    .then((response) => {
+                        const info = response.data;
+                        setComments(info.data);
+                    })
+                    .catch((err) => {});
+            })
+            .catch((error) => {
+                toast.error(error.response.data.message);
+            });
+
+        setComment('');
+    }
+
+    function handleReply(recipeId, commentId, replyContent) {
+        axios
+            .post(
+                `/comments/add/${recipeId}`,
+                { content: replyContent, replyTo: commentId },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                    },
+                },
+            )
+            .then((response) => {
+                // Reload all comments
+                axios
+                    .get(`/comments/${recipeId}?sort_by=oldest`)
+                    .then((response) => {
+                        const info = response.data;
+                        setComments(info.data);
+                    })
+                    .catch((err) => {});
+            })
+            .catch((error) => {
+                toast.error(error.response.data.message);
+            });
+    }
+
+    function handleDeleteComment(commentId) {
+        axios
+            .delete(`/comments/${commentId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
+            .then((response) => {
+                // Reload all comments
+                axios
+                    .get(`/comments/${recipeId}?sort_by=oldest`)
+                    .then((response) => {
+                        const info = response.data;
+                        setComments(info.data);
+                    })
+                    .catch((err) => {});
+            })
+            .catch((error) => {
+                toast.error(error.response.data.message);
             });
     }
 
@@ -133,41 +253,70 @@ function DetailPage() {
 
                 <div className={cx('action')}>
                     <div className={cx('save')}>
-                        <p>Add to your favourite</p>
-                        <Button
-                            large
-                            primary
-                            center
-                            className={cx('favourite-btn')}
-                            title="Add to favourite"
-                            leftIcon={<FontAwesomeIcon icon={faHeart} />}
-                            onClick={handleAddToFavourite}
-                        >
-                            Save
-                        </Button>
+                        <p>Thêm vào danh sách yêu thích</p>
+                        {recipe.isfavourite ? (
+                            <Tippy
+                                delay={[0, 50]}
+                                content="Xóa khỏi danh sách yêu thích"
+                                placement="auto"
+                            >
+                                <button
+                                    className={cx('favourite-btn', 'active')}
+                                    onClick={handleDeleteFavourite}
+                                >
+                                    <FontAwesomeIcon icon={faHeart} />
+                                </button>
+                            </Tippy>
+                        ) : (
+                            <Tippy
+                                delay={[0, 50]}
+                                content="Thêm vào danh sách yêu thích"
+                                placement="auto"
+                            >
+                                <button
+                                    className={cx('favourite-btn')}
+                                    onClick={handleAddToFavourite}
+                                >
+                                    <FontAwesomeIcon icon={faHeart} />
+                                </button>
+                            </Tippy>
+                        )}
                     </div>
                     <div className={cx('rating')}>
-                        <p>Rating the recipe</p>
+                        <p>Đánh giá ({recipe.averagerating || 'Chưa có đánh giá nào'})</p>
                         <div className={cx('stars')}>
-                            <FontAwesomeIcon icon={faStar} />
-                            <FontAwesomeIcon icon={faStar} />
-                            <FontAwesomeIcon icon={faStar} />
-                            <FontAwesomeIcon icon={faStar} />
-                            <FontAwesomeIcon icon={faStar} />
+                            <Rating
+                                isRequired
+                                readOnly
+                                style={{ maxWidth: 220 }}
+                                value={averagerating}
+                                onChange={ratingChanged}
+                            />
                         </div>
                     </div>
                 </div>
 
                 <div className={cx('comment-wrapper')}>
-                    <h2>Bình luận</h2>
+                    <h1>Bình luận</h1>
                     <div className={'comment-list'}>
-                        {COMMENTS.map((comment, index) => (
-                            <CommentItem data={comment} key={index} />
+                        {comments.map((comment, index) => (
+                            <CommentItem
+                                onDelete={handleDeleteComment}
+                                onReply={handleReply}
+                                data={comment}
+                                key={index}
+                            />
                         ))}
-                        <div className={cx('input-group')}>
-                            <img className={cx('avatar')} src={COMMENTS[0].avatar} alt="avatar" />
-                            <input className={cx('cmt-input')} placeholder="Nhập bình luận ..." />
-                        </div>
+                        <form onSubmit={handleComment} className={cx('input-group')}>
+                            <img className={cx('avatar')} src={avatar} alt="avatar" />
+                            <input
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                spellCheck="false"
+                                className={cx('cmt-input')}
+                                placeholder="Nhập bình luận ..."
+                            />
+                        </form>
                     </div>
                 </div>
             </div>
