@@ -20,7 +20,7 @@ function PendingPage() {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
     const [total, setTotal] = useState(0);
-    const per_page = 2;
+    const per_page = 4;
 
     const [pendingList, setPendingList] = useState([]);
 

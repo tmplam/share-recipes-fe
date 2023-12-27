@@ -1,6 +1,9 @@
 .wrapper {
-    display: flex;
     margin-top: 12px;
+}
+
+.main-comment {
+    display: flex;
 }
 
 .avatar {
@@ -10,11 +13,15 @@
     border-radius: 50%;
 }
 
+.main {
+    margin-left: 8px;
+}
+
 .info {
     padding: 8px;
     background-color: #fff;
     border-radius: var(--small-radius);
-    margin-left: 8px;
+
     max-width: 400px;
 }
 
@@ -25,4 +32,81 @@
 
 .content {
     margin: 0;
+}
+
+.action {
+    font-size: 1.4rem;
+    color: #828282;
+    margin: 2px 0 0 2px;
+}
+
+.reply-btn {
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 8px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.delete-btn {
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 8px;
+
+    &:hover {
+        color: rgb(255, 65, 65);
+        text-decoration: underline;
+    }
+}
+
+// Reply list
+.reply-list {
+    margin-left: 50px;
+}
+
+.reply-wrapper {
+    display: flex;
+    margin-top: 8px;
+}
+
+.icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reply-icon {
+    font-size: 2.4rem;
+    transform: rotate(90deg);
+}
+
+// Reply input
+.reply-form-group {
+    // margin: 12px 0;
+    align-items: center;
+    display: none;
+}
+
+.reply-form-group.show {
+    display: block;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.cmt-input {
+    margin-left: 8px;
+    border-radius: 2000px;
+    height: 40px;
+    min-width: 300px;
+    padding: 4px 12px;
+    font-size: 1.6rem;
 }

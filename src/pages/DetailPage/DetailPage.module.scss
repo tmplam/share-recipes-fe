@@ -58,6 +58,26 @@
     margin: 12px 0;
 }
 
+.favourite-btn {
+    min-width: 80px;
+    font-size: 2.2rem;
+    border-radius: var(--medium-radius);
+    padding: 4px 10px;
+    border: 1px solid #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.2);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.favourite-btn.active,
+.favourite-btn:hover {
+    min-width: 80px;
+    font-size: 2.2rem;
+    border-radius: var(--medium-radius);
+    padding: 4px 10px;
+    background-color: #ff4d4d;
+    color: var(--white);
+}
+
 .save p,
 .rating p {
     font-size: 2rem;
@@ -66,12 +86,20 @@
 }
 
 .stars {
-    margin-right: 6px;
+    // margin-right: 6px;
     color: var(--grey-text);
     font-size: 26px;
+
+    span {
+        line-height: 1;
+    }
 }
 
 // COMMENT
+.comment-wrapper {
+    margin-top: 12px;
+}
+
 .input-group {
     margin: 12px 0;
     display: flex;

@@ -93,9 +93,11 @@ function FavouritePage() {
 
     return (
         <Container className={cx('wrapper')}>
-            <h1 className={cx('title')}>
-                Công Thức Yêu Thích <FontAwesomeIcon icon={faStar} />
-            </h1>
+            <div className={cx('title-wrapper')}>
+                <h1 className={cx('title')}>
+                    Công Thức Yêu Thích <FontAwesomeIcon icon={faStar} />
+                </h1>
+            </div>
             <div className={cx('main')}>
                 <div className={cx('control')}>
                     <form id="search-form" className={cx('search')} onSubmit={handleSubmitSearch}>

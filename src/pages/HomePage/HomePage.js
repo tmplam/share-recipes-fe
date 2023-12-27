@@ -172,7 +172,7 @@ function HomePage() {
                         <p className={cx('info-item-title')}>Công thức</p>
                     </div>
                     <div className={cx('info-item')}>
-                        <p className={cx('info-item-number')}>{categoryList.length - 1}</p>
+                        <p className={cx('info-item-number')}>{categoryList.length}</p>
                         <p className={cx('info-item-title')}>Loại</p>
                     </div>
                 </div>

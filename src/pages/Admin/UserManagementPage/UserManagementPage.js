@@ -51,13 +51,17 @@ function AccountManagementPage() {
 
     useEffect(() => {
         axios
-            .get(`roles`)
+            .get(`roles`, {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
             .then((response) => {
                 const data = response.data;
                 setRoleList(data.data);
             })
             .catch((err) => {
-                toast.error(err?.response?.data?.message | 'Lỗi server!');
+                toast.error(err?.response?.data?.message || 'Lỗi server!');
             });
     }, []);
 
