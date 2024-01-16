@@ -27,7 +27,6 @@ import CreateUserPage from './pages/Admin/CreateUserPage';
 
 import RequireAuth from './components/RequireAuth';
 import Logout from './components/Logout';
-
 const router = createBrowserRouter([
     {
         path: '/',

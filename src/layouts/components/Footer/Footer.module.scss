@@ -1,0 +1,82 @@
+
+.wrapper {
+    background-color: var(--green);
+    width: 100%;
+}
+.container 
+{
+    background-color: var(--green);
+    width: 100%;
+    color: var(--white);
+    padding-bottom:  50px;
+
+}
+
+
+li 
+{
+    list-style:  none;
+}
+
+
+.contact-item {
+    display: flex;
+    flex-direction: row;
+     align-items: center;
+    // justify-content: center;
+    margin-top:  5px;
+}
+
+.link-group 
+{
+   
+    display: flex;
+    flex-direction:  column ;
+}
+.link-item
+{
+    text-decoration: none;
+    color: var(--white);
+}
+
+.link-item:hover
+{
+    text-decoration: underline;
+}
+
+.content 
+{
+    font-weight: 100;
+
+}
+.contact-item p 
+{
+    margin-left: 10px;
+    margin-bottom:  0px;
+    
+}
+
+.group-icon {
+    margin: 50px;
+    padding-top:  50px;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically (optional, adjust as needed) */
+}
+  
+.group-icon a {
+    color: var(--white);
+    width: 20px;
+    height: fit-content;
+    margin: 0 10px; /* Adjust the margin as needed to add spacing between icons */
+}
+  
+.icon + .icon 
+{
+    margin-left :50px ;
+}
+
+.mgt50 
+{
+    margin-top: 50px;
+}
