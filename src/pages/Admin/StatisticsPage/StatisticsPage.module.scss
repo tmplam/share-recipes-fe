@@ -1,0 +1,124 @@
+.wrapper {
+    padding-top: calc(var(--header-height) + 8px);
+}
+
+.title-wrapper {
+    background-color: var(--green);
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--small-radius);
+    margin-bottom: 12px;
+}
+
+.title {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--white);
+}
+
+.card-item {
+    width: 100%;
+    display: flex;
+    aspect-ratio: 5 / 2;
+    background-color: var(--white);
+    border-left: 6px solid #2695f0;
+    border-radius: var(--small-radius);
+    align-items: center;
+    justify-content: center;
+}
+
+.card-item.info {
+    border-color: #2695f0;
+
+    .card-title {
+        color: #2695f0;
+    }
+}
+
+.card-item.warning {
+    border-color: #f0df26;
+
+    .card-title {
+        color: #f0df26;
+    }
+}
+
+.card-item.danger {
+    border-color: #f6531d;
+
+    .card-title {
+        color: #f6531d;
+    }
+}
+
+.card-item.success {
+    border-color: #22cf30;
+
+    .card-title {
+        color: #22cf30;
+    }
+}
+
+.card-info {
+    flex: 3;
+    margin-left: 12px;
+}
+
+.card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2695f0;
+}
+
+.card-number {
+    font-size: 3.6rem;
+    color: #282828;
+}
+
+.card-icon {
+    flex: 1;
+    text-align: center;
+    font-size: 4rem;
+    color: #b9b9b9;
+}
+
+.break {
+    width: 100%;
+    margin: 20px 0;
+}
+
+// FILTER DATA FOR CHART
+.filter-wrapper {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.filter-control {
+    display: flex;
+    align-items: center;
+}
+
+.filter-control:not(:first-child) {
+    margin-left: 16px;
+}
+
+.filter-label {
+    margin-right: 8px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.filter-select {
+    border-radius: var(--small-radius);
+    width: 160px;
+    height: 32px;
+    outline: none;
+    border: none;
+}

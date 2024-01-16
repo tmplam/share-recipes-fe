@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faBookOpen, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 import Pagination from '~/components/Pagination';
@@ -10,6 +10,7 @@ import PostedItem from './components/PostedItem';
 import styles from './PostedPage.module.scss';
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
+import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
@@ -152,11 +153,32 @@ function FavouritePage() {
                         </div>
                     </div>
                     <Row className="gx-3">
-                        {postedList.map((recipe) => (
-                            <Col xs={12} md={6} lg={4} xl={3} key={recipe.recipeid}>
-                                <PostedItem onDelete={handleDeleteBtnClick} {...recipe} />
-                            </Col>
-                        ))}
+                        {postedList.length > 0 ? (
+                            postedList.map((recipe) => (
+                                <Col xs={12} md={6} lg={4} xl={3} key={recipe.recipeid}>
+                                    <PostedItem onDelete={handleDeleteBtnClick} {...recipe} />
+                                </Col>
+                            ))
+                        ) : (
+                            <div className={cx('alert-no-items')}>
+                                <span className={cx('alert-content')}>
+                                    Bạn chưa đăng công thức nào!
+                                </span>
+                                <Button
+                                    center
+                                    primary
+                                    rightIcon={
+                                        <FontAwesomeIcon
+                                            className={cx('icon-custom')}
+                                            icon={faArrowUp}
+                                        />
+                                    }
+                                    to={'/recipes/create'}
+                                >
+                                    Đăng ngay
+                                </Button>
+                            </div>
+                        )}
                     </Row>
                     {totalPage >= 2 ? (
                         <div className={cx('pagination-wrapper')}>

@@ -10,7 +10,7 @@ import SignUp from './pages/SignUpPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import NotFoundPage from './pages/NotFoundPage';
 
-import StatisticsPage from './pages/StatisticsPage';
+import StatisticsPage from './pages/Admin/StatisticsPage';
 
 // Login user pages
 import CreateRecipePage from './pages/User/CreateRecipePage';

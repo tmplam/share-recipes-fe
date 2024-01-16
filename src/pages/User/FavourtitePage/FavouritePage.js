@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faMagnifyingGlass, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 import Pagination from '~/components/Pagination';
@@ -10,6 +10,7 @@ import FavouriteItem from './components/FavouriteItem';
 import styles from './FavouritePage.module.scss';
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
+import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
@@ -132,11 +133,27 @@ function FavouritePage() {
                     </div>
                 </div>
                 <Row className="gx-3">
-                    {favouriteList.map((recipe) => (
-                        <Col xs={12} md={6} lg={4} xl={3} key={recipe.recipeid}>
-                            <FavouriteItem onDelete={handleDeleteFavourite} {...recipe} />
-                        </Col>
-                    ))}
+                    {favouriteList.length > 0 ? (
+                        favouriteList.map((recipe) => (
+                            <Col xs={12} md={6} lg={4} xl={3} key={recipe.recipeid}>
+                                <FavouriteItem onDelete={handleDeleteFavourite} {...recipe} />
+                            </Col>
+                        ))
+                    ) : (
+                        <div className={cx('alert-no-items')}>
+                            <span className={cx('alert-content')}>
+                                Bạn chưa có công thức yêu thích nào!
+                            </span>
+                            <Button
+                                center
+                                primary
+                                rightIcon={<FontAwesomeIcon icon={faHouse} />}
+                                to={'/'}
+                            >
+                                Về trang chủ
+                            </Button>
+                        </div>
+                    )}
                 </Row>
                 {totalPage >= 2 ? (
                     <div className={cx('pagination-wrapper')}>

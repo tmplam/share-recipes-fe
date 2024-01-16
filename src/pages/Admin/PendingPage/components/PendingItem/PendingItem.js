@@ -9,7 +9,7 @@ import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
-function PendingItem({ recipeid, name, description, recipeavatar }) {
+function PendingItem({ recipeid, name, description, recipeavatar, onApprove, onReject }) {
     return (
         <div className={cx('wrapper')}>
             <Tippy delay={[0, 50]} content="Xem chi tiết" placement="auto">
@@ -24,10 +24,22 @@ function PendingItem({ recipeid, name, description, recipeavatar }) {
             </div>
 
             <div className={cx('btn-group')}>
-                <Button small rounded center className={cx('btn')}>
+                <Button
+                    onClick={(e) => onApprove(recipeid)}
+                    small
+                    rounded
+                    center
+                    className={cx('btn')}
+                >
                     Duyệt
                 </Button>
-                <Button small rounded center className={cx('btn', 'btn-danger')}>
+                <Button
+                    onClick={(e) => onReject(recipeid)}
+                    small
+                    rounded
+                    center
+                    className={cx('btn', 'btn-danger')}
+                >
                     Từ chối
                 </Button>
             </div>

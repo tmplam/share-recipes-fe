@@ -13,6 +13,7 @@ function MainLayout() {
             <div className={cx('main')}>
                 <Outlet />
             </div>
+            {/* CHỖ NÀY NÈ */}
         </div>
     );
 }

@@ -99,11 +99,31 @@
     border: none;
 }
 
+// No item
+.alert-no-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+}
+
 // Pagination
 .pagination-wrapper {
     margin-top: 12px;
     margin-bottom: 4px;
     text-align: end;
+}
+
+.alert-content {
+    margin-right: 8px;
+    color: rgb(255, 62, 78);
+    font-size: 2rem;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.icon-custom {
+    transform: rotate(45deg);
 }
 
 // Modal

@@ -22,7 +22,20 @@ const cx = classNames.bind(styles);
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const EMAIL_REGEX = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+const EMAIL_REGEX =
+    // eslint-disable-next-line no-useless-escape
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+const fullNameValidate = (fullname) => {
+    const FULLNAME_REGEX = /\b[A-Z][a-z]*\b/;
+    const names = fullname.trim().split(/\s+/); // Tách chuỗi thành mảng các từ, loại bỏ khoảng trắng thừa
+    for (let i = 0; i < names.length; i++) {
+        if (!FULLNAME_REGEX.test(names[i])) {
+            return '';
+        }
+    }
+    return names.join(' ');
+};
 
 function AccountManagementPage() {
     const { auth } = useAuth();
@@ -68,7 +81,11 @@ function AccountManagementPage() {
 
     useEffect(() => {
         axios
-            .get(`roles`)
+            .get(`roles`, {
+                headers: {
+                    Authorization: auth?.token !== 'EXPIRED' ? auth?.token : null,
+                },
+            })
             .then((response) => {
                 const data = response.data;
                 setRoleList(data.data);
@@ -101,9 +118,9 @@ function AccountManagementPage() {
     }
 
     function handleNameChange(e) {
-        setName(e.target.value.trim());
-        const result = e.target.value.trim() !== '';
-        setValidName(result);
+        setName(e.target.value);
+        const name = fullNameValidate(e.target.value);
+        setValidName(name !== '');
     }
 
     function handleEmailChange(e) {
@@ -136,7 +153,7 @@ function AccountManagementPage() {
                 matchPwdRef.current.focus();
                 return false;
             });
-        } else if (name.trim() === '') {
+        } else if (fullNameValidate(name) === '') {
             setValidName(() => {
                 nameRef.current.focus();
                 return false;
@@ -158,7 +175,7 @@ function AccountManagementPage() {
 
                 const response = await axios.post(
                     '/users',
-                    { username, password: pwd, name, email, role },
+                    { username, password: pwd, name: fullNameValidate(name), email, role },
                     {
                         headers: {
                             'Content-Type': 'application/json',
@@ -309,7 +326,9 @@ function AccountManagementPage() {
                                 <FontAwesomeIcon className={cx('icon')} icon={faIdCard} />
                             </div>
                             <span className={cx('error')}>
-                                <FontAwesomeIcon icon={faInfoCircle} /> Không được bỏ trống!
+                                <FontAwesomeIcon icon={faInfoCircle} /> Tên không được bỏ trống.
+                                <br />
+                                Phải viết hoa chữ cái đầu và viết thường các chữ cái sau.
                             </span>
                         </div>
 

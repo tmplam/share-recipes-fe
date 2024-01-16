@@ -1,6 +1,6 @@
 const images = {
     logo: require('./logo.svg').default,
-    avatar: require('./avatar.jpg'),
+    avatar: require('./avatar.png'),
     background: require('./cooking-wallpaper.jpg'),
     loginImg: require('./login-img.jpg'),
     thumbnail_1: require('./formThumbnail1.jpg'),

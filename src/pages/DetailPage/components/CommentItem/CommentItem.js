@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowTurnUp } from '@fortawesome/free-solid-svg-icons';
-import { toast } from 'react-toastify';
+import images from '~/assets/images';
 import useAuth from '~/hooks/useAuth';
 import axios from '~/utils/api';
 
@@ -142,7 +142,11 @@ function CommentItem({ data, onReply, onDelete }) {
                             <FontAwesomeIcon className={cx('reply-icon')} icon={faArrowTurnUp} />
                         </div>
                         <form onSubmit={handleReply} className={cx('main-comment')}>
-                            <img className={cx('avatar')} src={profile.avatar} alt="avatar" />
+                            <img
+                                className={cx('avatar')}
+                                src={profile.avatar || images.avatar}
+                                alt="avatar"
+                            />
                             <input
                                 value={reply}
                                 onChange={(e) => setReply(e.target.value)}

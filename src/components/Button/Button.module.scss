@@ -32,8 +32,12 @@
 .icon {
     display: inline-flex;
     align-items: center;
-    width: 24px;
-    text-align: center;
+}
+
+.icon.left {
+    justify-content: flex-start;
+    text-align: start;
+    width: 20px;
 }
 
 // Button types

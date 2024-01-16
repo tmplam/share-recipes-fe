@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
-import { faHeart, faPlateWheat, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faPlateWheat, faStar, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { faNewspaper } from '@fortawesome/free-regular-svg-icons';
-import { Container } from 'react-bootstrap';
+import { Container, Modal } from 'react-bootstrap';
 
 import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
@@ -14,6 +14,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
 import CommentItem from './components/CommentItem';
+import images from '~/assets/images';
 import styles from './DetailPage.module.scss';
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
@@ -27,7 +28,8 @@ function DetailPage() {
     const [comments, setComments] = useState([]);
 
     const [avatar, setAvatar] = useState('');
-    const [averagerating, setAverageRating] = useState(0);
+
+    const [reload, setReload] = useState({});
 
     useEffect(() => {
         axios
@@ -57,12 +59,11 @@ function DetailPage() {
                 if (Number.isNaN(avg)) avg = 0;
                 else avg = avg.toFixed(1);
 
-                setAverageRating(avg);
                 setRecipe({ ...response?.data.data, averagerating: avg });
             })
             .catch((err) => {});
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [reload]);
 
     useEffect(() => {
         axios
@@ -114,10 +115,6 @@ function DetailPage() {
                 toast.error(err.response.data.message);
             });
     }
-
-    const ratingChanged = (newRating) => {
-        setAverageRating(newRating);
-    };
 
     const [comment, setComment] = useState('');
     function handleComment(e) {
@@ -201,6 +198,53 @@ function DetailPage() {
             });
     }
 
+    // RATING
+    // DELETE modal
+    const [ratedInfo, setRatedInfo] = useState({});
+
+    useEffect(() => {
+        axios
+            .get(`/rating/${recipeId}`, {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                },
+            })
+            .then((response) => {
+                const info = response.data;
+                setRatedInfo(info);
+            })
+            .catch((err) => {});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [reload]);
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const ratingChanged = (newRating) => {
+        axios
+            .post(
+                `/rating/${recipeId}`,
+                { rating: newRating },
+                {
+                    headers: {
+                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                    },
+                },
+            )
+            .then((response) => {
+                toast.success('Đánh giá thành công!');
+                setReload({});
+                handleClose();
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message);
+                handleClose();
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    };
+
     return (
         <Container>
             <div className={cx('wrapper')}>
@@ -251,45 +295,58 @@ function DetailPage() {
                     </div>
                 </div>
 
-                <div className={cx('action')}>
+                <div className={cx('action-wrapper')}>
                     <div className={cx('save')}>
-                        <p>Thêm vào danh sách yêu thích</p>
-                        {recipe.isfavourite ? (
-                            <Tippy
-                                delay={[0, 50]}
-                                content="Xóa khỏi danh sách yêu thích"
-                                placement="auto"
-                            >
-                                <button
-                                    className={cx('favourite-btn', 'active')}
-                                    onClick={handleDeleteFavourite}
+                        <p>Yêu thích, đánh giá</p>
+                        <div className={cx('action')}>
+                            {recipe.isfavourite ? (
+                                <Tippy
+                                    delay={[0, 50]}
+                                    content="Xóa khỏi danh sách yêu thích"
+                                    placement="auto"
                                 >
-                                    <FontAwesomeIcon icon={faHeart} />
+                                    <button
+                                        className={cx('favourite-btn', 'active')}
+                                        onClick={handleDeleteFavourite}
+                                    >
+                                        <FontAwesomeIcon icon={faHeart} />
+                                    </button>
+                                </Tippy>
+                            ) : (
+                                <Tippy
+                                    delay={[0, 50]}
+                                    content="Thêm vào danh sách yêu thích"
+                                    placement="auto"
+                                >
+                                    <button
+                                        className={cx('favourite-btn')}
+                                        onClick={handleAddToFavourite}
+                                    >
+                                        <FontAwesomeIcon icon={faHeart} />
+                                    </button>
+                                </Tippy>
+                            )}
+
+                            <Tippy delay={[0, 50]} content="Đánh giá công thức" placement="auto">
+                                <button className={cx('rating-btn')} onClick={handleShow}>
+                                    <FontAwesomeIcon icon={faStar} />
                                 </button>
                             </Tippy>
-                        ) : (
-                            <Tippy
-                                delay={[0, 50]}
-                                content="Thêm vào danh sách yêu thích"
-                                placement="auto"
-                            >
-                                <button
-                                    className={cx('favourite-btn')}
-                                    onClick={handleAddToFavourite}
-                                >
-                                    <FontAwesomeIcon icon={faHeart} />
-                                </button>
-                            </Tippy>
-                        )}
+                        </div>
                     </div>
+
                     <div className={cx('rating')}>
-                        <p>Đánh giá ({recipe.averagerating || 'Chưa có đánh giá nào'})</p>
+                        <p>
+                            {recipe.reviews > 0
+                                ? `${recipe.reviews} Lượt đánh giá (${recipe.averagerating} sao)`
+                                : 'Chưa có lượt đánh giá nào'}
+                        </p>
                         <div className={cx('stars')}>
                             <Rating
                                 isRequired
                                 readOnly
                                 style={{ maxWidth: 220 }}
-                                value={averagerating}
+                                value={recipe.averagerating}
                                 onChange={ratingChanged}
                             />
                         </div>
@@ -308,7 +365,11 @@ function DetailPage() {
                             />
                         ))}
                         <form onSubmit={handleComment} className={cx('input-group')}>
-                            <img className={cx('avatar')} src={avatar} alt="avatar" />
+                            <img
+                                className={cx('avatar')}
+                                src={avatar || images.avatar}
+                                alt="avatar"
+                            />
                             <input
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
@@ -320,6 +381,25 @@ function DetailPage() {
                     </div>
                 </div>
             </div>
+
+            <Modal centered show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <h2 style={{ margin: 0 }}>Đánh giá món ăn này!</h2>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Rating
+                        isRequired
+                        style={{ maxWidth: 220 }}
+                        value={ratedInfo?.rated}
+                        onChange={ratingChanged}
+                    />
+                </Modal.Body>
+                <Modal.Footer style={{ justifyContent: 'flex-start' }}>
+                    <span>Người thật, việc thật, rating sao cho thật!</span>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 }

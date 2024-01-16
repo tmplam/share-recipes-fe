@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
+import { Rating } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
 
 import styles from './FoodItem.module.scss';
 
@@ -14,7 +16,7 @@ function FoodItem({
     name,
     recipeavatar,
     estimatedtime,
-    average_rating,
+    averagerating,
     datesubmit,
     description,
     reviews,
@@ -22,6 +24,7 @@ function FoodItem({
     onAddToFavourite,
 }) {
     function handleAddToFavourite(e) {
+        alert(averagerating);
         e.preventDefault();
         onAddToFavourite(recipeid, index, isfavourite);
     }
@@ -46,11 +49,7 @@ function FoodItem({
             </div>
             <div className={cx('rating')}>
                 <div className={cx('stars')}>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
+                    <Rating isRequired readOnly style={{ maxWidth: 100 }} value={averagerating} />
                 </div>
                 <div className={cx('reviews')}>{'(' + reviews + ' Đánh giá)'}</div>
             </div>

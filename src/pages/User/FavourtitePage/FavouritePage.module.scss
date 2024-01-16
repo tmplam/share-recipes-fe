@@ -99,6 +99,22 @@
     border: none;
 }
 
+// NO item message
+.alert-no-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+}
+
+.alert-content {
+    margin-right: 8px;
+    color: rgb(255, 62, 78);
+    font-size: 2rem;
+    font-weight: 600;
+    font-style: italic;
+}
+
 // Pagination
 .pagination-wrapper {
     margin-top: 12px;
