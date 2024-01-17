@@ -1,7 +1,13 @@
 import classNames from 'classnames/bind';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faKey, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+    faUser,
+    faKey,
+    faInfoCircle,
+    faIdCard,
+    faEnvelope,
+} from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate, useLocation, Form } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 
@@ -15,6 +21,20 @@ const cx = classNames.bind(styles);
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const EMAIL_REGEX =
+    // eslint-disable-next-line no-useless-escape
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+const fullNameValidate = (fullname) => {
+    const FULLNAME_REGEX = /\b[A-Z][a-z]*\b/;
+    const names = fullname.trim().split(/\s+/); // Tách chuỗi thành mảng các từ, loại bỏ khoảng trắng thừa
+    for (let i = 0; i < names.length; i++) {
+        if (!FULLNAME_REGEX.test(names[i])) {
+            return '';
+        }
+    }
+    return names.join(' ');
+};
 
 function SignUp() {
     const { setAuth } = useAuth();
@@ -37,6 +57,16 @@ function SignUp() {
     const [validMatchPwd, setValidMatchPwd] = useState(true);
     const [matchPwdFocus, setMatchPwdFocus] = useState(false);
     const matchPwdRef = useRef();
+
+    const [name, setName] = useState('');
+    const [validName, setValidName] = useState(true);
+    const [nameFocus, setNameFocus] = useState(false);
+    const nameRef = useRef();
+
+    const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(true);
+    const [emailFocus, setEmailFocus] = useState(false);
+    const emailRef = useRef();
 
     const [success, setSuccess] = useState(true);
     const [errMsg, setErrMsg] = useState('');
@@ -63,6 +93,18 @@ function SignUp() {
         setValidMatchPwd(match);
     }
 
+    function handleNameChange(e) {
+        setName(e.target.value);
+        const name = fullNameValidate(e.target.value);
+        setValidName(name !== '');
+    }
+
+    function handleEmailChange(e) {
+        setEmail(e.target.value.trim());
+        const result = EMAIL_REGEX.test(e.target.value.trim());
+        setValidEmail(result);
+    }
+
     async function handleSubmitForm(e) {
         e.preventDefault();
 
@@ -81,12 +123,22 @@ function SignUp() {
                 matchPwdRef.current.focus();
                 return false;
             });
+        } else if (fullNameValidate(name) === '') {
+            setValidName(() => {
+                nameRef.current.focus();
+                return false;
+            });
+        } else if (!EMAIL_REGEX.test(email)) {
+            setValidEmail(() => {
+                emailRef.current.focus();
+                return false;
+            });
         } else {
             try {
                 setSuccess(true);
                 setIsSubmitting(true);
                 // HANDLE SIGN UP
-                const authInfo = await register(username, pwd);
+                const authInfo = await register(username, pwd, name, email);
 
                 setAuth(authInfo);
                 localStorage.setItem('authInfo', JSON.stringify(authInfo));
@@ -206,6 +258,57 @@ function SignUp() {
                                     <span className={cx('error')}>
                                         <FontAwesomeIcon icon={faInfoCircle} /> Phải khớp với mật
                                         khẩu đã nhập.
+                                    </span>
+                                </div>
+
+                                <div
+                                    className={cx(
+                                        'form-group',
+                                        { invalid: !validName },
+                                        { focus: nameFocus },
+                                    )}
+                                >
+                                    <div className={cx('control-wrapper')}>
+                                        <input
+                                            ref={nameRef}
+                                            value={name}
+                                            onChange={handleNameChange}
+                                            onFocus={(e) => setNameFocus(true)}
+                                            onBlur={(e) => setNameFocus(false)}
+                                            className={cx('form-control')}
+                                            placeholder="Họ và tên"
+                                        />
+                                        <FontAwesomeIcon className={cx('icon')} icon={faIdCard} />
+                                    </div>
+                                    <span className={cx('error')}>
+                                        <FontAwesomeIcon icon={faInfoCircle} /> Tên không được bỏ
+                                        trống.
+                                        <br />
+                                        Phải viết hoa chữ cái đầu và viết thường các chữ cái sau.
+                                    </span>
+                                </div>
+
+                                <div
+                                    className={cx(
+                                        'form-group',
+                                        { invalid: !validEmail },
+                                        { focus: emailFocus },
+                                    )}
+                                >
+                                    <div className={cx('control-wrapper')}>
+                                        <input
+                                            ref={emailRef}
+                                            value={email}
+                                            onChange={handleEmailChange}
+                                            onFocus={(e) => setEmailFocus(true)}
+                                            onBlur={(e) => setEmailFocus(false)}
+                                            className={cx('form-control')}
+                                            placeholder="Email"
+                                        />
+                                        <FontAwesomeIcon className={cx('icon')} icon={faEnvelope} />
+                                    </div>
+                                    <span className={cx('error')}>
+                                        <FontAwesomeIcon icon={faInfoCircle} /> Email không hợp lệ!
                                     </span>
                                 </div>
 

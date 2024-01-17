@@ -55,6 +55,7 @@ function DetailPage() {
                 },
             })
             .then((response) => {
+                console.log(response.data.data);
                 let avg = Number.parseFloat(response.data.data.averagerating);
                 if (Number.isNaN(avg)) avg = 0;
                 else avg = avg.toFixed(1);
@@ -249,7 +250,12 @@ function DetailPage() {
         <Container>
             <div className={cx('wrapper')}>
                 <div className={cx('recipe-info')}>
-                    <h1 className={cx('name')}>{recipe.name}</h1>
+                    <div className={cx('name-wrapper')}>
+                        <h1 className={cx('name')}>{recipe.name}</h1>
+                        <p className={cx('author')}>
+                            <span>Người đăng:</span> Trần Mỹ Phú Lâm
+                        </p>
+                    </div>
                     <div className={cx('detail')}>
                         <div className={cx('desc')}>
                             <img
@@ -264,18 +270,35 @@ function DetailPage() {
                                     </h2>
                                     <div dangerouslySetInnerHTML={{ __html: recipe.description }} />
                                 </div>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p>
-                                        <strong style={{ fontWeight: 600, fontSize: 2.2 + 'rem' }}>
-                                            Loại:{' '}
-                                        </strong>{' '}
-                                        {recipe.category}
-                                    </p>
+                                <div className="d-flex justify-content-between align-items-end">
+                                    <div>
+                                        <p style={{ marginBottom: '4px' }}>
+                                            <strong
+                                                style={{
+                                                    fontWeight: 600,
+                                                    fontSize: 2 + 'rem',
+                                                }}
+                                            >
+                                                Loại:{' '}
+                                            </strong>{' '}
+                                            {recipe.category}
+                                        </p>
+                                        <p>
+                                            <strong
+                                                style={{ fontWeight: 600, fontSize: 1.8 + 'rem' }}
+                                            >
+                                                Thời gian:{' '}
+                                            </strong>{' '}
+                                            {recipe.estimatedtime} phút
+                                        </p>
+                                    </div>
                                     <p>
                                         <strong style={{ fontWeight: 600, fontSize: 1.8 + 'rem' }}>
-                                            Thời gian:{' '}
+                                            Ngày cập nhật:{' '}
                                         </strong>{' '}
-                                        {recipe.estimatedtime} phút
+                                        {new Date(recipe.datesubmit).getDate()}/
+                                        {new Date(recipe.datesubmit).getMonth() + 1}/
+                                        {new Date(recipe.datesubmit).getFullYear()}
                                     </p>
                                 </div>
                             </div>
@@ -295,91 +318,99 @@ function DetailPage() {
                     </div>
                 </div>
 
-                <div className={cx('action-wrapper')}>
-                    <div className={cx('save')}>
-                        <p>Yêu thích, đánh giá</p>
-                        <div className={cx('action')}>
-                            {recipe.isfavourite ? (
-                                <Tippy
-                                    delay={[0, 50]}
-                                    content="Xóa khỏi danh sách yêu thích"
-                                    placement="auto"
-                                >
-                                    <button
-                                        className={cx('favourite-btn', 'active')}
-                                        onClick={handleDeleteFavourite}
+                {recipe.status === 'Rejected' || recipe.status === 'Pending' ? null : (
+                    <>
+                        <div className={cx('action-wrapper')}>
+                            <div className={cx('save')}>
+                                <p>Yêu thích, đánh giá</p>
+                                <div className={cx('action')}>
+                                    {recipe.isfavourite ? (
+                                        <Tippy
+                                            delay={[0, 50]}
+                                            content="Xóa khỏi danh sách yêu thích"
+                                            placement="auto"
+                                        >
+                                            <button
+                                                className={cx('favourite-btn', 'active')}
+                                                onClick={handleDeleteFavourite}
+                                            >
+                                                <FontAwesomeIcon icon={faHeart} />
+                                            </button>
+                                        </Tippy>
+                                    ) : (
+                                        <Tippy
+                                            delay={[0, 50]}
+                                            content="Thêm vào danh sách yêu thích"
+                                            placement="auto"
+                                        >
+                                            <button
+                                                className={cx('favourite-btn')}
+                                                onClick={handleAddToFavourite}
+                                            >
+                                                <FontAwesomeIcon icon={faHeart} />
+                                            </button>
+                                        </Tippy>
+                                    )}
+
+                                    <Tippy
+                                        delay={[0, 50]}
+                                        content="Đánh giá công thức"
+                                        placement="auto"
                                     >
-                                        <FontAwesomeIcon icon={faHeart} />
-                                    </button>
-                                </Tippy>
-                            ) : (
-                                <Tippy
-                                    delay={[0, 50]}
-                                    content="Thêm vào danh sách yêu thích"
-                                    placement="auto"
-                                >
-                                    <button
-                                        className={cx('favourite-btn')}
-                                        onClick={handleAddToFavourite}
-                                    >
-                                        <FontAwesomeIcon icon={faHeart} />
-                                    </button>
-                                </Tippy>
-                            )}
+                                        <button className={cx('rating-btn')} onClick={handleShow}>
+                                            <FontAwesomeIcon icon={faStar} />
+                                        </button>
+                                    </Tippy>
+                                </div>
+                            </div>
 
-                            <Tippy delay={[0, 50]} content="Đánh giá công thức" placement="auto">
-                                <button className={cx('rating-btn')} onClick={handleShow}>
-                                    <FontAwesomeIcon icon={faStar} />
-                                </button>
-                            </Tippy>
+                            <div className={cx('rating')}>
+                                <p>
+                                    {recipe.reviews > 0
+                                        ? `${recipe.reviews} Lượt đánh giá (${recipe.averagerating} sao)`
+                                        : 'Chưa có lượt đánh giá nào'}
+                                </p>
+                                <div className={cx('stars')}>
+                                    <Rating
+                                        isRequired
+                                        readOnly
+                                        style={{ maxWidth: 220 }}
+                                        value={recipe.averagerating}
+                                        onChange={ratingChanged}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className={cx('rating')}>
-                        <p>
-                            {recipe.reviews > 0
-                                ? `${recipe.reviews} Lượt đánh giá (${recipe.averagerating} sao)`
-                                : 'Chưa có lượt đánh giá nào'}
-                        </p>
-                        <div className={cx('stars')}>
-                            <Rating
-                                isRequired
-                                readOnly
-                                style={{ maxWidth: 220 }}
-                                value={recipe.averagerating}
-                                onChange={ratingChanged}
-                            />
+                        <div className={cx('comment-wrapper')}>
+                            <h1>Bình luận</h1>
+                            <div className={'comment-list'}>
+                                {comments.map((comment, index) => (
+                                    <CommentItem
+                                        onDelete={handleDeleteComment}
+                                        onReply={handleReply}
+                                        data={comment}
+                                        key={index}
+                                    />
+                                ))}
+                                <form onSubmit={handleComment} className={cx('input-group')}>
+                                    <img
+                                        className={cx('avatar')}
+                                        src={avatar || images.avatar}
+                                        alt="avatar"
+                                    />
+                                    <input
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        spellCheck="false"
+                                        className={cx('cmt-input')}
+                                        placeholder="Nhập bình luận ..."
+                                    />
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div className={cx('comment-wrapper')}>
-                    <h1>Bình luận</h1>
-                    <div className={'comment-list'}>
-                        {comments.map((comment, index) => (
-                            <CommentItem
-                                onDelete={handleDeleteComment}
-                                onReply={handleReply}
-                                data={comment}
-                                key={index}
-                            />
-                        ))}
-                        <form onSubmit={handleComment} className={cx('input-group')}>
-                            <img
-                                className={cx('avatar')}
-                                src={avatar || images.avatar}
-                                alt="avatar"
-                            />
-                            <input
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                spellCheck="false"
-                                className={cx('cmt-input')}
-                                placeholder="Nhập bình luận ..."
-                            />
-                        </form>
-                    </div>
-                </div>
+                    </>
+                )}
             </div>
 
             <Modal centered show={show} onHide={handleClose}>

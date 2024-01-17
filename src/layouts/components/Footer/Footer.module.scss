@@ -1,82 +1,66 @@
-
 .wrapper {
+    margin-top: 12px;
     background-color: var(--green);
     width: 100%;
 }
-.container 
-{
+.container {
     background-color: var(--green);
     width: 100%;
     color: var(--white);
-    padding-bottom:  50px;
-
 }
 
-
-li 
-{
-    list-style:  none;
+li {
+    list-style: none;
 }
-
 
 .contact-item {
     display: flex;
     flex-direction: row;
-     align-items: center;
+    align-items: center;
     // justify-content: center;
-    margin-top:  5px;
+    margin-top: 5px;
 }
 
-.link-group 
-{
-   
+.link-group {
     display: flex;
-    flex-direction:  column ;
+    flex-direction: column;
 }
-.link-item
-{
+.link-item {
     text-decoration: none;
     color: var(--white);
 }
 
-.link-item:hover
-{
+.link-item:hover {
     text-decoration: underline;
 }
 
-.content 
-{
+.content {
     font-weight: 100;
-
 }
-.contact-item p 
-{
+.contact-item p {
     margin-left: 10px;
-    margin-bottom:  0px;
-    
+    margin-bottom: 0px;
 }
 
 .group-icon {
     margin: 50px;
-    padding-top:  50px;
+    padding-top: 50px;
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically (optional, adjust as needed) */
 }
-  
+
 .group-icon a {
     color: var(--white);
     width: 20px;
     height: fit-content;
     margin: 0 10px; /* Adjust the margin as needed to add spacing between icons */
 }
-  
-.icon + .icon 
-{
-    margin-left :50px ;
+
+.icon + .icon {
+    margin-left: 50px;
 }
 
-.mgt50 
-{
+.mgt50 {
     margin-top: 50px;
 }

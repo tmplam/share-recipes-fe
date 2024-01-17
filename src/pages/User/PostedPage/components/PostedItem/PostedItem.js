@@ -38,16 +38,16 @@ function PostedItem({
 
     function handleHide(e) {
         e.preventDefault();
+
         axios
             .put(
-                `/recipes/${recipeid}/status`,
+                `recipes/${recipeid}/status`,
                 {
                     status: 'Hidden',
                 },
                 {
                     headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                        Authorization: auth?.token !== 'EXPIRED' ? auth?.token : null,
                     },
                 },
             )
@@ -99,7 +99,8 @@ function PostedItem({
                     <div className={cx('recipe-info')}>
                         <h2 className={cx('name')}>{name}</h2>
                         <p>
-                            <strong>Loại: </strong>Đồ ăn nhanh
+                            <strong>Loại: </strong>
+                            {category}
                         </p>
                     </div>
                 </div>
@@ -131,7 +132,9 @@ function PostedItem({
                         </button>
                     </Tippy>
                 ) : (
-                    'Pending/Deleted'
+                    <span className={cx('status', { rejected: status === 'Rejected' })}>
+                        {status}
+                    </span>
                 )}
             </div>
         </div>

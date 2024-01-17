@@ -6,6 +6,7 @@
 .wrapper {
     width: 90%;
     display: flex;
+    min-height: 384px;
     height: calc(100vh - var(--header-height) - 20px);
     margin-top: calc(var(--header-height) + 10px);
     margin-bottom: 10px;

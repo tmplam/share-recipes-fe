@@ -81,7 +81,7 @@ function CommentItem({ data, onReply, onDelete }) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('main-comment')}>
-                <img className={cx('avatar')} src={data.avatar} alt="avatar" />
+                <img className={cx('avatar')} src={data.avatar || images.avatar} alt="avatar" />
                 <div className={cx('main')}>
                     <div className={cx('info')}>
                         <p className={cx('username')}>{data.userName}</p>

@@ -1,5 +1,6 @@
 .wrapper {
     padding-top: calc(var(--header-height) + 8px);
+    min-height: calc(100vh - 8px);
 }
 
 // INFO
@@ -79,6 +80,16 @@
     height: 32px;
     outline: none;
     border: none;
+}
+
+// No-item message
+.notfound-message {
+    margin-right: 8px;
+    color: rgb(255, 62, 78);
+    font-size: 2rem;
+    font-weight: 600;
+    font-style: italic;
+    margin: 20px 0;
 }
 
 .pagination-wrapper {

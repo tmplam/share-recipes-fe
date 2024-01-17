@@ -81,8 +81,13 @@
     }
 }
 
-.filter-control {
-    // margin-left: 12px;
+.filter-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.filter-control:not(:first-child) {
+    margin-left: 16px;
 }
 
 .filter-label {
@@ -141,4 +146,10 @@
 .modal-btn.delete {
     background-color: #ff3c3c;
     color: var(--white);
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

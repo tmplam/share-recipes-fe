@@ -18,9 +18,11 @@ function FavouritePage() {
     const { auth } = useAuth();
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
+    const [totalRecipe, setTotalRecipe] = useState(0);
     const per_page = 4;
 
     const [category, setCategory] = useState('');
+    const [status, setStatus] = useState('');
 
     const [keyword, setKeyword] = useState('');
     const keywordRef = useRef();
@@ -30,7 +32,7 @@ function FavouritePage() {
     useEffect(() => {
         axios
             .get(
-                `/user/recipes?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}`,
+                `/user/recipes?page=${page}&per_page=${per_page}&keyword=${keyword}&category=${category}&status=${status}`,
                 {
                     headers: {
                         Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
@@ -41,12 +43,13 @@ function FavouritePage() {
                 const data = response.data;
                 setPage(data.page);
                 setTotalPage(data.total_page);
+                setTotalRecipe(data.total);
                 setPostedList(data.data);
             })
             .catch((err) => {
                 // console.error(err);
             });
-    }, [page, keyword, category, auth]);
+    }, [page, keyword, category, status, auth]);
 
     useEffect(() => {
         axios
@@ -133,23 +136,46 @@ function FavouritePage() {
                             </button>
                         </form>
 
-                        <div className={cx('filter-control')}>
-                            <label className={cx('filter-label')} htmlFor="category">
-                                Loại:
-                            </label>
+                        <div className={cx('filter-wrapper')}>
+                            <div className={cx('filter-control')}>
+                                <label className={cx('filter-label')} htmlFor="status">
+                                    Trạng thái:
+                                </label>
 
-                            <select
-                                onChange={(e) => setCategory(e.target.value)}
-                                className={cx('filter-select')}
-                                id="category"
-                            >
-                                <option value="all">Tất cả</option>
-                                {categoryList.map((category) => (
-                                    <option key={category.categoryid} value={category.categoryid}>
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </select>
+                                <select
+                                    onChange={(e) => setStatus(e.target.value)}
+                                    className={cx('filter-select')}
+                                    id="status"
+                                >
+                                    <option value="">Tất cả</option>
+                                    <option value="Approved">Đã duyệt</option>
+                                    <option value="Hidden">Đã ẩn</option>
+                                    <option value="Pending">Chờ duyệt</option>
+                                    <option value="Rejected">Từ chối</option>
+                                </select>
+                            </div>
+
+                            <div className={cx('filter-control')}>
+                                <label className={cx('filter-label')} htmlFor="category">
+                                    Loại:
+                                </label>
+
+                                <select
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    className={cx('filter-select')}
+                                    id="category"
+                                >
+                                    <option value="">Tất cả</option>
+                                    {categoryList.map((category) => (
+                                        <option
+                                            key={category.categoryid}
+                                            value={category.categoryid}
+                                        >
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <Row className="gx-3">
@@ -159,7 +185,7 @@ function FavouritePage() {
                                     <PostedItem onDelete={handleDeleteBtnClick} {...recipe} />
                                 </Col>
                             ))
-                        ) : (
+                        ) : status === '' && category === '' && keyword.trim() === '' ? (
                             <div className={cx('alert-no-items')}>
                                 <span className={cx('alert-content')}>
                                     Bạn chưa đăng công thức nào!
@@ -178,30 +204,43 @@ function FavouritePage() {
                                     Đăng ngay
                                 </Button>
                             </div>
+                        ) : (
+                            <div className={cx('alert-no-items')}>
+                                <span className={cx('alert-content')}>
+                                    Không tìm thấy công thức!
+                                </span>
+                            </div>
                         )}
                     </Row>
-                    {totalPage >= 2 ? (
-                        <div className={cx('pagination-wrapper')}>
+
+                    <div className={cx('pagination-wrapper')}>
+                        {postedList.length > 0 ? (
+                            <div style={{ fontSize: '1.8rem' }}>
+                                Hiển thị {postedList.length}/{totalRecipe} kết quả
+                            </div>
+                        ) : null}
+
+                        {totalPage >= 2 ? (
                             <Pagination
                                 page={page}
                                 total_page={totalPage}
                                 onPageChange={handlePageChange}
                             />
-                        </div>
-                    ) : (
-                        false
-                    )}
+                        ) : (
+                            false
+                        )}
+                    </div>
                 </div>
             </Container>
 
             <Modal centered show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        <h2 style={{ margin: 0 }}>Xác nhận!</h2>
+                        <h2 style={{ margin: 0 }}>Xác nhận xóa!</h2>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p style={{ margin: 0 }}>Một phát nữa là đi luôn đó shop!!!</p>
+                    <p style={{ margin: 0 }}>Bạn không thể khôi phục sau khi xóa!!!</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <button className={cx('modal-btn')} onClick={handleClose}>

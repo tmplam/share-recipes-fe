@@ -43,7 +43,8 @@ function FavouriteItem({
                 <div className={cx('recipe-info')}>
                     <h2 className={cx('name')}>{name}</h2>
                     <p>
-                        <strong>Loại: </strong>Đồ ăn nhanh
+                        <strong>Loại: </strong>
+                        {category}
                     </p>
                 </div>
             </div>

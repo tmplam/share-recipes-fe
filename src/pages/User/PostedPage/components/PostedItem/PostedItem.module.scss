@@ -102,3 +102,15 @@
 .recipe-info {
     margin: 0 6px;
 }
+
+.status {
+    text-transform: uppercase;
+    color: blue;
+    font-weight: 500;
+    text-shadow: 0px 0px 2px #ffffff;
+}
+
+.status.rejected {
+    color: red;
+    font-weight: 500;
+}

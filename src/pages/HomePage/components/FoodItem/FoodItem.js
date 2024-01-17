@@ -24,7 +24,6 @@ function FoodItem({
     onAddToFavourite,
 }) {
     function handleAddToFavourite(e) {
-        alert(averagerating);
         e.preventDefault();
         onAddToFavourite(recipeid, index, isfavourite);
     }

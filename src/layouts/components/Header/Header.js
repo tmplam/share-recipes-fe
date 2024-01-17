@@ -36,6 +36,19 @@ const cx = classNames.bind(styles);
 
 const adminMenu = [
     {
+        icon: <FontAwesomeIcon icon={faListCheck} />,
+        title: 'Danh sách chờ',
+        to: '/admin/pending',
+    },
+    {
+        icon: <FontAwesomeIcon icon={faChartLine} />,
+        title: 'Thống kê',
+        to: '/admin/statistics',
+    },
+];
+
+const superAdminMenu = [
+    {
         icon: <FontAwesomeIcon icon={faCircleUser} />,
         title: 'Quản lý user',
         to: '/admin/manage-users',
@@ -149,11 +162,17 @@ function Header() {
                     <div className={cx('control')}>
                         {auth?.token && auth?.token !== 'EXPIRED' ? (
                             <>
-                                {auth?.roles?.find((role) =>
-                                    ['Admin', 'SuperAdmin'].includes(role),
-                                ) ? (
+                                {auth?.roles.includes('Admin') ? (
                                     <div>
                                         <Menu items={adminMenu}>
+                                            <button className={cx('action-btn', 'manage-btn')}>
+                                                <FontAwesomeIcon icon={faLayerGroup} />
+                                            </button>
+                                        </Menu>
+                                    </div>
+                                ) : auth?.roles.includes('SuperAdmin') ? (
+                                    <div>
+                                        <Menu items={superAdminMenu}>
                                             <button className={cx('action-btn', 'manage-btn')}>
                                                 <FontAwesomeIcon icon={faLayerGroup} />
                                             </button>

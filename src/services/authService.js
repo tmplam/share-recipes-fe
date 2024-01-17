@@ -1,9 +1,9 @@
 import axios from '~/utils/api';
 
-export const register = async (username, password) => {
+export const register = async (username, password, name, email) => {
     const response = await axios.post(
         'auth/register',
-        { username, password },
+        { username, password, name, email },
         {
             headers: { 'Content-Type': 'application/json' },
         },

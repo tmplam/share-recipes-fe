@@ -224,7 +224,7 @@ function HomePage() {
                 <Row>
                     {isLoading ? (
                         <Spinner animation="grow" variant="success" />
-                    ) : (
+                    ) : recipeList.length > 0 ? (
                         recipeList.map((recipe, index) => (
                             <Col xs={6} md={4} lg={3} key={recipe.recipeid}>
                                 <FoodItem
@@ -234,6 +234,10 @@ function HomePage() {
                                 />
                             </Col>
                         ))
+                    ) : (
+                        <Col col={12} className="text-center">
+                            <p className={cx('notfound-message')}>Không tìm thấy công thức nào!</p>
+                        </Col>
                     )}
                 </Row>
 

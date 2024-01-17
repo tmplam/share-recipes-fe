@@ -159,7 +159,7 @@ function AddRecipePage() {
             try {
                 const response = await axios.post('/user/recipes', formData, {
                     headers: {
-                        Authorization: auth?.token,
+                        Authorization: auth?.token !== 'EXPIRED' ? auth?.token : null,
                     },
                 });
                 toast.success(response.data.message);

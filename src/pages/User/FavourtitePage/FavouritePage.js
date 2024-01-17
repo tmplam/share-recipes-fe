@@ -139,7 +139,7 @@ function FavouritePage() {
                                 <FavouriteItem onDelete={handleDeleteFavourite} {...recipe} />
                             </Col>
                         ))
-                    ) : (
+                    ) : category === '' && keyword.trim() === '' ? (
                         <div className={cx('alert-no-items')}>
                             <span className={cx('alert-content')}>
                                 Bạn chưa có công thức yêu thích nào!
@@ -147,11 +147,17 @@ function FavouritePage() {
                             <Button
                                 center
                                 primary
-                                rightIcon={<FontAwesomeIcon icon={faHouse} />}
+                                rightIcon={
+                                    <FontAwesomeIcon className={cx('icon-custom')} icon={faHouse} />
+                                }
                                 to={'/'}
                             >
                                 Về trang chủ
                             </Button>
+                        </div>
+                    ) : (
+                        <div className={cx('alert-no-items')}>
+                            <span className={cx('alert-content')}>Không tìm thấy công thức!</span>
                         </div>
                     )}
                 </Row>
