@@ -28,42 +28,15 @@ import images from '~/assets/images';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
 import useAuth from '~/hooks/useAuth';
+import useUserInfo from '~/hooks/useUserInfo';
 import useSearch from '~/hooks/useSearch';
-import axios from '~/utils/api';
+import useForceReload from '~/hooks/useForceReload';
+
 import { useEffect, useState } from 'react';
+import axios from '~/utils/api';
+import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
-
-const adminMenu = [
-    {
-        icon: <FontAwesomeIcon icon={faListCheck} />,
-        title: 'Danh sách chờ',
-        to: '/admin/pending',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faChartLine} />,
-        title: 'Thống kê',
-        to: '/admin/statistics',
-    },
-];
-
-const superAdminMenu = [
-    {
-        icon: <FontAwesomeIcon icon={faCircleUser} />,
-        title: 'Quản lý user',
-        to: '/admin/manage-users',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faListCheck} />,
-        title: 'Danh sách chờ',
-        to: '/admin/pending',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faChartLine} />,
-        title: 'Thống kê',
-        to: '/admin/statistics',
-    },
-];
 
 const userMenu = [
     {
@@ -98,29 +71,61 @@ function Header() {
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
     const { auth } = useAuth();
+    const { userInfo } = useUserInfo();
+    const { _totalPending } = useForceReload();
     // Search context
     const { setKeyword } = useSearch();
-    const [userInfo, setUserInfo] = useState({});
     const [searchKeyword, setSearchKeyword] = useState('');
 
+    const [totalPending, setTotalPending] = useState(0);
+
     useEffect(() => {
-        if (auth?.token && auth?.token !== 'EXPIRED') {
+        if (auth?.token !== 'EXPIRED' && ['Admin', 'SuperAdmin'].includes(auth?.roles[0])) {
             axios
-                .get('user/profile', {
+                .get(`recipes/pending`, {
                     headers: {
-                        Authorization: `${auth.token}`,
-                        'Content-Type': 'application/json',
+                        Authorization: auth.token,
                     },
                 })
                 .then((response) => {
-                    const data = response.data.data;
-                    setUserInfo(data);
+                    const data = response.data;
+                    setTotalPending(data.total);
                 })
-                .catch((error) => {
-                    // console.log(error);
+                .catch((err) => {
+                    toast.error(err?.response?.data?.message || 'Lỗi server!');
                 });
         }
+    }, [_totalPending.reloadTotalPending, auth]);
 
+    const adminMenu = [
+        {
+            icon: <FontAwesomeIcon icon={faListCheck} />,
+            title: 'Danh sách chờ',
+            to: '/admin/pending',
+            alert: totalPending,
+        },
+    ];
+
+    const superAdminMenu = [
+        {
+            icon: <FontAwesomeIcon icon={faCircleUser} />,
+            title: 'Quản lý user',
+            to: '/admin/manage-users',
+        },
+        {
+            icon: <FontAwesomeIcon icon={faListCheck} />,
+            title: 'Danh sách chờ',
+            to: '/admin/pending',
+            alert: totalPending,
+        },
+        {
+            icon: <FontAwesomeIcon icon={faChartLine} />,
+            title: 'Thống kê',
+            to: '/admin/statistics',
+        },
+    ];
+
+    useEffect(() => {
         setKeyword(searchParams.get('keyword') || '');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

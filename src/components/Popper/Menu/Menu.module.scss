@@ -27,4 +27,11 @@
     &:hover {
         background-color: rgba(22, 24, 35, 0.03);
     }
+
+    .menu-item-alert {
+        background-color: rgb(247, 42, 42);
+        color: var(--white);
+        padding: 2px 8px;
+        border-radius: 50%;
+    }
 }

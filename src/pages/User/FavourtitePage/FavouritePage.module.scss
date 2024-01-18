@@ -1,6 +1,7 @@
 .wrapper {
     margin-top: calc(var(--header-height) + 20px);
     margin-bottom: 20px;
+    min-height: 440px;
 }
 
 .title-wrapper {
@@ -104,7 +105,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80px;
+    min-height: 220px;
 }
 
 .alert-content {

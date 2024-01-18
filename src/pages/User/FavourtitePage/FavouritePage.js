@@ -78,7 +78,7 @@ function FavouritePage() {
             })
             .then((response) => {
                 const data = response.data;
-                toast.success(data.message);
+                toast.warning(data.message);
                 if (favouriteList.length === 1 && page > 1) {
                     setPage(page - 1);
                 } else {

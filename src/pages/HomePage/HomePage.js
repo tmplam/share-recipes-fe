@@ -20,7 +20,7 @@ function HomePage() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [page, setPage] = useState(() => {
-        return Number.parseInt(searchParams.get('page')) || 1;
+        return { page: Number.parseInt(searchParams.get('page')) || 1 };
     });
 
     const [totalPage, setTotalPage] = useState(0);
@@ -43,10 +43,35 @@ function HomePage() {
     });
 
     useEffect(() => {
+        // setIsloading(true);
+        // axios
+        //     .get(
+        //         `recipes?category=${category}&page=${page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
+        //         {
+        //             headers: {
+        //                 Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+        //             },
+        //         },
+        //     )
+        //     .then((response) => {
+        //         const data = response.data;
+        //         setPage(data.page);
+        //         setTotalPage(data.total_page);
+        //         setRecipeList(data.data);
+        //     })
+        //     .catch((err) => {
+        //         // console.log(err);
+        //     });
+        // setIsloading(false);
+        handlePageChange(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [keyword, category]);
+
+    useEffect(() => {
         setIsloading(true);
         axios
             .get(
-                `recipes?category=${category}&page=${page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
+                `recipes?category=${category}&page=${page.page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
                 {
                     headers: {
                         Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
@@ -55,7 +80,10 @@ function HomePage() {
             )
             .then((response) => {
                 const data = response.data;
-                setPage(data.page);
+                setPage((prev) => {
+                    prev.page = data.page;
+                    return prev;
+                });
                 setTotalPage(data.total_page);
                 setRecipeList(data.data);
             })
@@ -63,7 +91,8 @@ function HomePage() {
                 // console.log(err);
             });
         setIsloading(false);
-    }, [keyword, page, category, sort, auth]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, sort]);
 
     useEffect(() => {
         axios
@@ -104,7 +133,8 @@ function HomePage() {
     }
 
     function handlePageChange(page) {
-        setPage(page);
+        setPage({ page });
+
         setSearchParams((prev) => {
             prev.set('page', page);
             return prev;
@@ -244,7 +274,7 @@ function HomePage() {
                 {totalPage > 1 ? (
                     <div className={cx('pagination-wrapper')}>
                         <Pagination
-                            page={page}
+                            page={page.page}
                             total_page={totalPage}
                             onPageChange={handlePageChange}
                         />

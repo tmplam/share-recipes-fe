@@ -28,7 +28,7 @@ function AccountManagementPage() {
     const [role, setRole] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [totalUser, setTotalUser] = useState(0);
-    const perPage = 4;
+    const perPage = 5;
 
     const [keyword, setKeyword] = useState('');
     const keywordRef = useRef();
@@ -45,7 +45,6 @@ function AccountManagementPage() {
             })
             .then((response) => {
                 const data = response.data;
-                console.log(data);
                 setUserList(data.data);
                 setPage(data.page);
                 setTotalPage(data.total_page);
@@ -95,9 +94,9 @@ function AccountManagementPage() {
                 },
             )
             .then((response) => {
-                const data = response.data;
+                // const data = response.data;
                 setRerender({});
-                toast.success(data.message);
+                toast.warning('Đã khóa tài khoản người dùng!');
             })
             .catch((err) => {
                 toast.error(err.response.data.message);
@@ -116,9 +115,9 @@ function AccountManagementPage() {
                 },
             )
             .then((response) => {
-                const data = response.data;
+                // const data = response.data;
                 setRerender({});
-                toast.success(data.message);
+                toast.success('Đã bỏ khóa tài khoản!');
             })
             .catch((err) => {
                 toast.error(err.response.data.message);

@@ -13,57 +13,71 @@ function Footer() {
     return (
         <div className={cx('wrapper')}>
             <Container className={cx('container')}>
-                <Row>
+                <Row className="g-5">
                     <Col xs={6} lg={4} md={6} sm={12}>
-                        <div className={cx('intro', 'mgt50')}>
-                            <h4>About Us:</h4>
+                        <div className={cx('intro')}>
+                            <h3>Thông tin:</h3>
                             <h4 className={cx('content')}>
-                                Crafted by a dedicated team from HCMUS, this website is the
-                                culmination of our university projects. Fueled by our passion for
-                                cooking, we aspire to provide a platform where enthusiasts can
-                                immerse themselves in a myriad of diverse recipes. Welcome to our
-                                culinary journey!
+                                - Sản phẩm được thiết kế và cài đặt bởi nhóm 9 lớp SE CQ21_3, là
+                                trang web chia sẻ các công thức nấu ăn dành cho những người yêu
+                                thích nấu nướng.
+                                <br />
+                                - Quy trình thiết kế dựa trên mô hình phát triển phần mềm linh họa -
+                                Scrum.
+                                <br />- Các công nghệ và tiện ích sử dụng: ReactJS (Frontend),
+                                NodeJS - ExpressJS (Backend), Postgress (Database), Github (Quản lí
+                                mã nguồn), Postman (Kiểm thử API), Jira (Quản lí quy trình phần
+                                mềm), ...
                             </h4>
                         </div>
                     </Col>
                     <Col lg={4} md={6} sm={12}>
-                        <div className={cx('Contact', 'mgt50')}>
-                            <h4>Contact Us:</h4>
+                        <div className={cx('Contact')}>
+                            <h3>Liên hệ:</h3>
                             <div className={cx('location', 'contact-item')}>
-                                <FontAwesomeIcon icon={faLocationDot} />
+                                <span style={{ width: '28px', textAlign: 'start' }}>
+                                    <FontAwesomeIcon icon={faLocationDot} />
+                                </span>
                                 <p className={cx('content')}>
-                                    University of Science, Di An City, Binh Duong
+                                    Trường đại học Khoa Học Tự Nhiên, Dĩ An, Bình Dương
                                 </p>
                             </div>
 
                             <div className={cx('phone', 'contact-item')}>
-                                <FontAwesomeIcon icon={faPhone} />
-                                <p className={cx('content')}>028 123456789</p>
+                                <span style={{ width: '28px', textAlign: 'start' }}>
+                                    <FontAwesomeIcon icon={faPhone} />
+                                </span>
+                                <p className={cx('content')}>+84 349028348</p>
                             </div>
 
                             <div className={cx('mail', 'contact-item')}>
-                                <FontAwesomeIcon icon={faEnvelope} />
+                                <span style={{ width: '28px', textAlign: 'start' }}>
+                                    <FontAwesomeIcon icon={faEnvelope} />
+                                </span>
                                 <p className={cx('content')}>group9SE2023@gmail.com</p>
                             </div>
                         </div>
                     </Col>
 
                     <Col lg={4} md={6} sm={12}>
-                        <div className={cx('link', 'mgt50')}>
-                            <h4>Link</h4>
+                        <div className={cx('link')}>
+                            <h3>Đường dẫn</h3>
                             <div className={cx('link-group')}>
-                                <Link className={cx('link-item', 'content')}>Term</Link>
-                                <Link className={cx('link-item', 'content')}>How it works</Link>
+                                <Link className={cx('link-item', 'content')}>Điều khoản</Link>
+                                <Link className={cx('link-item', 'content')}>Cách sử dụng</Link>
                             </div>
                         </div>
                     </Col>
                 </Row>
 
-                <Row>
+                <Row className="justify-content-center">
                     <div className={cx('group-icon', 'mgt50')}>
-                        <Link className={cx('icon')}>
+                        <a
+                            href="https://www.facebook.com/profile.php?id=100019167581327"
+                            className={cx('icon')}
+                        >
                             <FontAwesomeIcon icon={faFacebook} size="2x" />
-                        </Link>
+                        </a>
                         <Link className={cx('icon')}>
                             <FontAwesomeIcon icon={faTwitter} size="2x" />
                         </Link>
@@ -73,9 +87,9 @@ function Footer() {
                         <Link className={cx('icon')}>
                             <FontAwesomeIcon icon={faInstagram} size="2x" />
                         </Link>
-                        <Link className={cx('icon')}>
+                        <a href="https://github.com/PhuLamCoder" className={cx('icon')}>
                             <FontAwesomeIcon icon={faGithub} size="2x" />
-                        </Link>
+                        </a>
                     </div>
                 </Row>
             </Container>

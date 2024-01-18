@@ -76,10 +76,6 @@ const router = createBrowserRouter([
                         path: 'admin/pending/:recipeId',
                         element: <PendingDetailPage />,
                     },
-                    {
-                        path: 'admin/statistics',
-                        element: <StatisticsPage />,
-                    },
                 ],
             },
             {
@@ -93,6 +89,10 @@ const router = createBrowserRouter([
                     {
                         path: 'admin/create-user',
                         element: <CreateUserPage />,
+                    },
+                    {
+                        path: 'admin/statistics',
+                        element: <StatisticsPage />,
                     },
                 ],
             },

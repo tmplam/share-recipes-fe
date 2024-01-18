@@ -1,6 +1,7 @@
 .wrapper {
     margin-top: calc(var(--header-height) + 20px);
     margin-bottom: 20px;
+    min-height: 440px;
 }
 
 .title-wrapper {
@@ -22,6 +23,40 @@
     color: var(--white);
 }
 
+// UTILS SECTION
+.utils-wrapper {
+    text-align: end;
+    margin-bottom: 12px;
+}
+
+.post-btn {
+    display: inline-block;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: var(--small-radius);
+    background-color: rgba(14, 98, 254, 0.8);
+
+    &:hover {
+        background-color: rgba(14, 98, 254, 1);
+    }
+}
+
+.statictics-btn {
+    font-weight: 500;
+    margin-left: 8px;
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: var(--small-radius);
+    background-color: rgba(251, 30, 30, 0.8);
+
+    &:hover {
+        background-color: rgba(251, 30, 30, 1);
+    }
+}
+
+// MAIN SECTION
 .main {
     border: 2px solid var(--green);
     padding: 12px 20px;
@@ -109,7 +144,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80px;
+    min-height: 220px;
 }
 
 // Pagination

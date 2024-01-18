@@ -55,7 +55,6 @@ function DetailPage() {
                 },
             })
             .then((response) => {
-                console.log(response.data.data);
                 let avg = Number.parseFloat(response.data.data.averagerating);
                 if (Number.isNaN(avg)) avg = 0;
                 else avg = avg.toFixed(1);
@@ -120,60 +119,75 @@ function DetailPage() {
     const [comment, setComment] = useState('');
     function handleComment(e) {
         e.preventDefault();
-
-        axios
-            .post(
-                `/comments/add/${recipeId}`,
-                { content: comment },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+        let commentContent = comment.trim().split(/\s+/);
+        if (commentContent[0] === '') {
+            toast.error('Chưa nhập nội dung bình luận!');
+        } else if (commentContent.length > 100) {
+            toast.error('Không bình luận quá 100 từ!');
+        } else {
+            axios
+                .post(
+                    `/comments/add/${recipeId}`,
+                    { content: commentContent.join(' ') },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                        },
                     },
-                },
-            )
-            .then((response) => {
-                // Reload all comments
-                axios
-                    .get(`/comments/${recipeId}?sort_by=oldest`)
-                    .then((response) => {
-                        const info = response.data;
-                        setComments(info.data);
-                    })
-                    .catch((err) => {});
-            })
-            .catch((error) => {
-                toast.error(error.response.data.message);
-            });
-
-        setComment('');
+                )
+                .then((response) => {
+                    // Reload all comments
+                    axios
+                        .get(`/comments/${recipeId}?sort_by=oldest`)
+                        .then((response) => {
+                            const info = response.data;
+                            setComments(info.data);
+                        })
+                        .catch((err) => {});
+                })
+                .catch((error) => {
+                    toast.error(error.response.data.message);
+                });
+            setComment('');
+        }
     }
 
     function handleReply(recipeId, commentId, replyContent) {
-        axios
-            .post(
-                `/comments/add/${recipeId}`,
-                { content: replyContent, replyTo: commentId },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+        replyContent = replyContent.trim().split(/\s+/);
+        if (replyContent[0] === '') {
+            toast.error('Chưa nhập nội dung bình luận!');
+            return false;
+        } else if (replyContent.length > 100) {
+            toast.error('Không bình luận quá 100 từ!');
+            return false;
+        } else {
+            axios
+                .post(
+                    `/comments/add/${recipeId}`,
+                    { content: replyContent.join(' '), replyTo: commentId },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
+                        },
                     },
-                },
-            )
-            .then((response) => {
-                // Reload all comments
-                axios
-                    .get(`/comments/${recipeId}?sort_by=oldest`)
-                    .then((response) => {
-                        const info = response.data;
-                        setComments(info.data);
-                    })
-                    .catch((err) => {});
-            })
-            .catch((error) => {
-                toast.error(error.response.data.message);
-            });
+                )
+                .then((response) => {
+                    // Reload all comments
+                    axios
+                        .get(`/comments/${recipeId}?sort_by=oldest`)
+                        .then((response) => {
+                            const info = response.data;
+                            setComments(info.data);
+                        })
+                        .catch((err) => {});
+                })
+                .catch((error) => {
+                    toast.error(error.response.data.message);
+                });
+            return true;
+        }
     }
 
     function handleDeleteComment(commentId) {
@@ -253,7 +267,7 @@ function DetailPage() {
                     <div className={cx('name-wrapper')}>
                         <h1 className={cx('name')}>{recipe.name}</h1>
                         <p className={cx('author')}>
-                            <span>Người đăng:</span> Trần Mỹ Phú Lâm
+                            <span>Người đăng:</span> {recipe?.author?.name}
                         </p>
                     </div>
                     <div className={cx('detail')}>

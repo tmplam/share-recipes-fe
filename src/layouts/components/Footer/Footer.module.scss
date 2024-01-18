@@ -1,8 +1,9 @@
 .wrapper {
-    margin-top: 12px;
+    margin-top: 50px;
     background-color: var(--green);
     width: 100%;
 }
+
 .container {
     background-color: var(--green);
     width: 100%;
@@ -37,14 +38,15 @@ li {
 .content {
     font-weight: 100;
 }
+
 .contact-item p {
-    margin-left: 10px;
+    // margin-left: 10px;
     margin-bottom: 0px;
 }
 
 .group-icon {
-    margin: 50px;
-    padding-top: 50px;
+    padding-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically (optional, adjust as needed) */

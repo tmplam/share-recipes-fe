@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Spinner } from 'react-bootstrap';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Editor } from '@tinymce/tinymce-react';
@@ -11,6 +12,7 @@ import Button from '~/components/Button';
 
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
+import useForceReload from '~/hooks/useForceReload';
 
 const cx = classNames.bind(styles);
 
@@ -52,6 +54,8 @@ const tinyInit = {
 
 function AddRecipePage() {
     const { auth } = useAuth();
+    const { _totalPending } = useForceReload();
+    const navigate = useNavigate();
 
     const nameRef = useRef();
     const categoryRef = useRef();
@@ -64,6 +68,8 @@ function AddRecipePage() {
 
     const [selectedFile, setSelectedFile] = useState(null);
     const [preview, setPreview] = useState();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [categoryList, setCategoryList] = useState([]);
     useEffect(() => {
@@ -146,9 +152,9 @@ function AddRecipePage() {
         }
 
         // Check time
-        if (!/^\d+$/.test(timeRef.current.value.trim())) {
+        if (!/^[1-9]\d*$/.test(timeRef.current.value.trim())) {
             timeRef.current.parentNode.querySelector(`.${cx('error')}`).innerText =
-                'Vui lòng nhập số!';
+                'Vui lòng nhập số nguyên dương!';
             valid = false;
         } else {
             formData.append('estimatedTime', timeRef.current.value.trim());
@@ -157,11 +163,15 @@ function AddRecipePage() {
 
         if (valid) {
             try {
+                setIsSubmitting(true);
                 const response = await axios.post('/user/recipes', formData, {
                     headers: {
                         Authorization: auth?.token !== 'EXPIRED' ? auth?.token : null,
                     },
                 });
+                setIsSubmitting(false);
+                _totalPending.setReloadTotalPending({});
+                navigate('/', { replace: true });
                 toast.success(response.data.message);
             } catch (error) {
                 // Xử lý lỗi
@@ -320,7 +330,21 @@ function AddRecipePage() {
                                     <span className={cx('error')}></span>
                                 </div>
 
-                                <Button rounded w100 green center type="submit">
+                                <Button
+                                    disabled={isSubmitting}
+                                    rounded
+                                    w100
+                                    green
+                                    center
+                                    type="submit"
+                                    rightIcon={
+                                        isSubmitting ? (
+                                            <Spinner animation="border" variant="light" />
+                                        ) : (
+                                            false
+                                        )
+                                    }
+                                >
                                     Đăng
                                 </Button>
                             </form>

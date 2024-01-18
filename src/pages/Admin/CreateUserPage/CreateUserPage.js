@@ -27,7 +27,9 @@ const EMAIL_REGEX =
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 const fullNameValidate = (fullname) => {
-    const FULLNAME_REGEX = /\b[A-Z][a-z]*\b/;
+    const FULLNAME_REGEX =
+        /^[A-ZÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶĐÉÈẺẼẸÊẾỀỂỄỆÚÙỦŨỤƯỨỪỬỮỰÍÌỈĨỊÓÒỎÕỌƠỚỜỞỠỢÔỐỒỔỖỘÝỲỶỸỴ][a-záàảãạâấầẩẫậăắằẳẵặđéèẻẽẹêếềểễệúùủũụưứừửữựíìỉĩịóòỏõọơớờởỡợôốồổỗộýỳỷỹỵ]*$/;
+
     const names = fullname.trim().split(/\s+/); // Tách chuỗi thành mảng các từ, loại bỏ khoảng trắng thừa
     for (let i = 0; i < names.length; i++) {
         if (!FULLNAME_REGEX.test(names[i])) {
@@ -93,7 +95,7 @@ function AccountManagementPage() {
             .catch((err) => {
                 toast.error(err?.response?.data?.message | 'Lỗi server!');
             });
-    }, []);
+    }, [auth?.token]);
 
     useEffect(() => {
         usernameRef.current.focus();
@@ -322,6 +324,7 @@ function AccountManagementPage() {
                                     onBlur={(e) => setNameFocus(false)}
                                     className={cx('form-control')}
                                     placeholder="Họ và tên"
+                                    spellCheck={false}
                                 />
                                 <FontAwesomeIcon className={cx('icon')} icon={faIdCard} />
                             </div>

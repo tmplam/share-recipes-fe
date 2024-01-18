@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import styles from './ProfilePage.module.scss';
 
 import images from '~/assets/images';
+import useUserInfo from '~/hooks/useUserInfo';
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
 import { useEffect, useState, useRef } from 'react';
@@ -16,6 +17,7 @@ const cx = classNames.bind(styles);
 
 function Profile() {
     const { auth } = useAuth();
+    const { setUserInfo } = useUserInfo();
     const [displayName, setDisplayName] = useState('');
     const [name, setName] = useState('');
     const [avatar, setAvatar] = useState('');
@@ -38,7 +40,8 @@ function Profile() {
             })
             .then((response) => {
                 const profile = response.data.data;
-                console.log(profile);
+                setUserInfo(profile);
+
                 setName(profile.name);
                 setDisplayName(profile.name);
                 setEmail(profile.email);
@@ -47,7 +50,7 @@ function Profile() {
             .catch((err) => {
                 // console.log(err);
             });
-    }, [auth?.token, rerender]);
+    }, [auth?.token, setUserInfo, rerender]);
 
     async function handleSubmitUpdate(e) {
         e.preventDefault();
@@ -65,13 +68,43 @@ function Profile() {
                     Authorization: auth?.token !== 'EXPIRED' ? auth?.token : null,
                 },
             });
-            setIsSubmitting(false);
             toast.success(response.data.message);
             setRerender({});
         } catch (error) {
             // Xử lý lỗi
             toast.error(error?.response?.data?.message);
         }
+        setIsSubmitting(false);
+    }
+
+    async function handleSubmitChangePwd(e) {
+        e.preventDefault();
+        try {
+            setIsSubmitting(true);
+            const response = await axios.put(
+                '/auth/password/reset',
+                {
+                    'old-password': oldPassword,
+                    'new-password': newPassword,
+                    'repeat-new-password': confirmNewPassword,
+                },
+                {
+                    headers: {
+                        Authorization: auth?.token !== 'EXPIRED' ? auth?.token : null,
+                    },
+                },
+            );
+            toast.success(response.data.message);
+            setOldPassword('');
+            setNewPassword('');
+            setConfirmNewPassword('');
+            handleChangeView();
+            setRerender({});
+        } catch (error) {
+            // Xử lý lỗi
+            toast.error(error?.response?.data?.message);
+        }
+        setIsSubmitting(false);
     }
 
     function handleChangeView(e) {
@@ -207,6 +240,7 @@ function Profile() {
                                         <div className={cx('control-wrapper')}>
                                             <label htmlFor="oldPwd">Mật khẩu cũ:</label>
                                             <input
+                                                required
                                                 type="password"
                                                 autoComplete="new-password"
                                                 id="oldPwd"
@@ -221,6 +255,7 @@ function Profile() {
                                         <div className={cx('control-wrapper')}>
                                             <label htmlFor="newPwd">Mật khẩu mới:</label>
                                             <input
+                                                required
                                                 type="password"
                                                 autoComplete="new-password"
                                                 id="newPwd"
@@ -235,6 +270,7 @@ function Profile() {
                                         <div className={cx('control-wrapper')}>
                                             <label htmlFor="confirmPwd">Nhập lại:</label>
                                             <input
+                                                required
                                                 type="password"
                                                 autoComplete="new-password"
                                                 id="confirmPwd"
@@ -261,11 +297,18 @@ function Profile() {
                                 </Button>
 
                                 <Button
+                                    disabled={isSubmitting}
                                     ml
-                                    onClick={handleSubmitUpdate}
+                                    onClick={handleSubmitChangePwd}
                                     center
                                     green
-                                    leftIcon={<FontAwesomeIcon icon={faFloppyDisk} />}
+                                    leftIcon={
+                                        isSubmitting ? (
+                                            <Spinner animation="border" variant="light" />
+                                        ) : (
+                                            <FontAwesomeIcon icon={faFloppyDisk} />
+                                        )
+                                    }
                                 >
                                     Lưu
                                 </Button>

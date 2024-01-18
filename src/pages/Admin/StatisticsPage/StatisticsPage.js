@@ -9,6 +9,7 @@ import {
     faCalendar,
     faCalendarDays,
 } from '@fortawesome/free-solid-svg-icons';
+
 import {
     Chart as ChartJS,
     ArcElement,
@@ -106,10 +107,13 @@ function StatisticsPage() {
             })
             .then((response) => {
                 let data = response.data.data;
-                let totalInYear = data.reduce((accumulator, currentValue, index) => {
-                    return accumulator + currentValue.num_recipes;
-                }, 0);
-                let totalInMonth = data[new Date().getMonth()].num_recipes;
+                let totalInYear = data.recipeCountByMonth.reduce(
+                    (accumulator, currentValue, index) => {
+                        return accumulator + currentValue.num_recipes;
+                    },
+                    0,
+                );
+                let totalInMonth = data.recipeCountByMonth[new Date().getMonth()].num_recipes;
                 setTotalRecipeInYear(totalInYear);
                 setTotalRecipeInMonth(totalInMonth);
             })
@@ -128,7 +132,6 @@ function StatisticsPage() {
             })
             .then((response) => {
                 let data = response.data.data;
-                console.log(data);
                 let statisticByMonth = data.recipeCountByMonth.map((item) => item.num_recipes);
                 setRecipeByCategory(data.recipeCountByCategory);
                 setRecipeByMonth(statisticByMonth);
@@ -316,6 +319,12 @@ function StatisticsPage() {
                                 </option>
                                 <option value={new Date().getFullYear() - 2}>
                                     {new Date().getFullYear() - 2}
+                                </option>
+                                <option value={new Date().getFullYear() - 3}>
+                                    {new Date().getFullYear() - 3}
+                                </option>
+                                <option value={new Date().getFullYear() - 4}>
+                                    {new Date().getFullYear() - 4}
                                 </option>
                             </select>
                         </div>

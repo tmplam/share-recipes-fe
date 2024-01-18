@@ -73,9 +73,11 @@ function CommentItem({ data, onReply, onDelete }) {
     const [reply, setReply] = useState('');
     function handleReply(e) {
         e.preventDefault();
-        onReply(data.recipeId, data.commentId, reply);
-        handleBlurReply(e);
-        setReply('');
+        let success = onReply(data.recipeId, data.commentId, reply);
+        if (success) {
+            handleBlurReply(e);
+            setReply('');
+        }
     }
 
     return (

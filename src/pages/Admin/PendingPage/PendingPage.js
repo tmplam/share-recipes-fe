@@ -9,6 +9,7 @@ import styles from './PendingPage.module.scss';
 import PendingItem from './components/PendingItem';
 
 import useAuth from '~/hooks/useAuth';
+import useForceReload from '~/hooks/useForceReload';
 import axios from '~/utils/api';
 import { useEffect, useState } from 'react';
 import Pagination from '~/components/Pagination';
@@ -17,6 +18,7 @@ const cx = classNames.bind(styles);
 
 function PendingPage() {
     const { auth } = useAuth();
+    const { _totalPending } = useForceReload();
 
     const [rerender, setRerender] = useState({});
 
@@ -66,6 +68,7 @@ function PendingPage() {
             .then((response) => {
                 // const data = response.data;
                 toast.success('Duyệt công thức thành công!');
+                _totalPending.setReloadTotalPending({});
                 setRerender({});
             })
             .catch((err) => {
@@ -89,6 +92,7 @@ function PendingPage() {
             .then((response) => {
                 // const data = response.data;
                 toast.warning('Đã từ chối công thức!');
+                _totalPending.setReloadTotalPending({});
                 setRerender({});
             })
             .catch((err) => {

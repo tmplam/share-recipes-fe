@@ -2,8 +2,26 @@ import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faBookOpen, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import {
+    faMagnifyingGlass,
+    faBookOpen,
+    faArrowUp,
+    faChartPie,
+    faCirclePlus,
+} from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
+
+import {
+    Chart as ChartJS,
+    ArcElement,
+    Tooltip,
+    Legend,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+} from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
 
 import Pagination from '~/components/Pagination';
 import PostedItem from './components/PostedItem';
@@ -11,10 +29,40 @@ import styles from './PostedPage.module.scss';
 import axios from '~/utils/api';
 import useAuth from '~/hooks/useAuth';
 import Button from '~/components/Button';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function FavouritePage() {
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
+
+const options = {
+    plugins: {
+        legend: {
+            position: 'top',
+        },
+        title: {
+            display: true,
+            text: 'THỐNG KÊ THEO LOẠI',
+            color: '#666',
+            font: {
+                weight: 'bold',
+                size: 24,
+            },
+        },
+        doughnutlabel: {
+            labels: [
+                {
+                    text: 'Custom Text', // Văn bản tùy chỉnh
+                    font: {
+                        size: '20', // Kích thước văn bản
+                    },
+                },
+            ],
+        },
+    },
+};
+
+function PostedPage() {
     const { auth } = useAuth();
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
@@ -28,6 +76,8 @@ function FavouritePage() {
     const keywordRef = useRef();
     const [postedList, setPostedList] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
+
+    const [staticticsData, setStaticticsData] = useState([]);
 
     useEffect(() => {
         axios
@@ -75,17 +125,17 @@ function FavouritePage() {
     const [deleteId, setDeleteId] = useState('');
     function handleDeleteBtnClick(recipeId) {
         setDeleteId(recipeId);
-        handleShow();
+        handleShowDelete();
     }
 
     // DELETE modal
-    const [show, setShow] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleShowDelete = () => setShowDelete(true);
 
     function handleDeleteRecipe() {
-        handleClose();
+        handleCloseDelete();
         axios
             .put(
                 `/recipes/${deleteId}/status`,
@@ -110,6 +160,55 @@ function FavouritePage() {
             });
     }
 
+    useEffect(() => {
+        axios
+            .get(`/user/recipes/count/statistic?year=${new Date().getFullYear()}`, {
+                headers: {
+                    Authorization: auth?.token !== 'EXPIRED' ? auth?.token : null,
+                },
+            })
+            .then((response) => {
+                let data = response.data.data;
+                setStaticticsData(data);
+            })
+            .catch((err) => {
+                // console.log(err);
+            });
+    }, [auth?.token]);
+
+    const recipeByCategoryChartData = {
+        labels: staticticsData.map((item) => item.category.name),
+        datasets: [
+            {
+                label: 'Số lượng công thức',
+                data: staticticsData.map((item) => item.num_recipes),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                ],
+                borderWidth: 1.5,
+            },
+        ],
+    };
+
+    // DELETE modal
+    const [showChart, setShowChart] = useState(false);
+
+    const handleCloseChart = () => setShowChart(false);
+    const handleShowChart = () => setShowChart(true);
+
     return (
         <>
             <Container className={cx('wrapper')}>
@@ -117,6 +216,15 @@ function FavouritePage() {
                     <h1 className={cx('title')}>
                         Công Thức Đã Đăng <FontAwesomeIcon icon={faBookOpen} />
                     </h1>
+                </div>
+                <div className={cx('utils-wrapper')}>
+                    <Link to="/recipes/create" className={cx('post-btn')}>
+                        Đăng <FontAwesomeIcon icon={faCirclePlus} />
+                    </Link>
+
+                    <button onClick={handleShowChart} className={cx('statictics-btn')}>
+                        Biểu đồ <FontAwesomeIcon icon={faChartPie} />
+                    </button>
                 </div>
                 <div className={cx('main')}>
                     <div className={cx('control')}>
@@ -233,7 +341,7 @@ function FavouritePage() {
                 </div>
             </Container>
 
-            <Modal centered show={show} onHide={handleClose}>
+            <Modal centered show={showDelete} onHide={handleCloseDelete}>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         <h2 style={{ margin: 0 }}>Xác nhận xóa!</h2>
@@ -243,7 +351,7 @@ function FavouritePage() {
                     <p style={{ margin: 0 }}>Bạn không thể khôi phục sau khi xóa!!!</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button className={cx('modal-btn')} onClick={handleClose}>
+                    <button className={cx('modal-btn')} onClick={handleCloseDelete}>
                         Hủy bỏ
                     </button>
                     <button className={cx('modal-btn', 'delete')} onClick={handleDeleteRecipe}>
@@ -251,8 +359,20 @@ function FavouritePage() {
                     </button>
                 </Modal.Footer>
             </Modal>
+
+            {/* Biểu đồ thống kê */}
+            <Modal centered show={showChart} onHide={handleCloseChart}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <h2 style={{ margin: 0 }}>Biểu đồ thống kê</h2>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Doughnut options={options} data={recipeByCategoryChartData} />
+                </Modal.Body>
+            </Modal>
         </>
     );
 }
 
-export default FavouritePage;
+export default PostedPage;
