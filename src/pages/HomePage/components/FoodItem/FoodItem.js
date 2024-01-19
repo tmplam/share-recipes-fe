@@ -55,7 +55,7 @@ function FoodItem({
 
             <div className={cx('footer')}>
                 <span className={cx('time')}>{estimatedtime + ' phút'}</span>
-                <Link className={cx('view-btn')} to={`/recipes/${recipeid}`}>
+                <Link className={cx('view-btn')} to={`/recipes/detail/${recipeid}`}>
                     Xem chi tiết
                 </Link>
             </div>

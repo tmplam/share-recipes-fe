@@ -1,29 +1,15 @@
-import classNames from 'classnames/bind';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faMagnifyingGlass,
     faBell,
     faLayerGroup,
-    faArrowRightFromBracket,
     faListCheck,
     faChartLine,
 } from '@fortawesome/free-solid-svg-icons';
-import {
-    faHeart,
-    faUser,
-    faCircleUser,
-    faBookmark,
-    faShareFromSquare,
-} from '@fortawesome/free-regular-svg-icons';
-
+import { faCircleUser } from '@fortawesome/free-regular-svg-icons';
 import { Container } from 'react-bootstrap';
-
 import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css';
-
-import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
@@ -31,43 +17,12 @@ import useAuth from '~/hooks/useAuth';
 import useUserInfo from '~/hooks/useUserInfo';
 import useSearch from '~/hooks/useSearch';
 import useForceReload from '~/hooks/useForceReload';
-
 import { useEffect, useState } from 'react';
 import axios from '~/utils/api';
 import { toast } from 'react-toastify';
+import { cx, userMenu } from './Header';
 
-const cx = classNames.bind(styles);
-
-const userMenu = [
-    {
-        icon: <FontAwesomeIcon icon={faUser} />,
-        title: 'Cá nhân',
-        to: '/profile',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faShareFromSquare} />,
-        title: 'Chia sẻ',
-        to: '/recipes/create',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faBookmark} />,
-        title: 'Đã đăng',
-        to: '/recipes/posted',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faHeart} />,
-        title: 'Yêu thích',
-        to: '/recipes/favourite',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faArrowRightFromBracket} />,
-        title: 'Đăng xuất',
-        to: '/logout',
-        separate: true,
-    },
-];
-
-function Header() {
+export function Header() {
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
     const { auth } = useAuth();
@@ -143,7 +98,8 @@ function Header() {
 
     function handleReloadHome(e) {
         // e.preventDefault();
-        _homeReload.setReloadHome({});
+        console.log(location.state?.from?.pathname);
+        // _homeReload.setReloadHome({});
     }
 
     return (
@@ -228,5 +184,3 @@ function Header() {
         </header>
     );
 }
-
-export default Header;

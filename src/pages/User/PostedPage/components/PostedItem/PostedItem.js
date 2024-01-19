@@ -92,7 +92,7 @@ function PostedItem({
         <div className={cx('outer-wrapper')}>
             <Link
                 className={cx('wrapper')}
-                to={`/recipes/${recipeid}`}
+                to={`/recipes/detail/${recipeid}`}
                 style={{ backgroundImage: `url("${recipeavatar}")` }}
             >
                 <div className={cx('inner-wrapper')}>

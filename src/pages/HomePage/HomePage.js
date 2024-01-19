@@ -11,13 +11,16 @@ import images from '~/assets/images';
 import axios from '~/utils/api';
 // Search context
 import useSearch from '~/hooks/useSearch';
+import useForceReload from '~/hooks/useForceReload';
 import useAuth from '~/hooks/useAuth';
 
 const cx = classNames.bind(styles);
 
 function HomePage() {
     const { auth } = useAuth();
+    const { _homeReload } = useForceReload();
     const [searchParams, setSearchParams] = useSearchParams();
+    // const location = useLocation();
 
     const [page, setPage] = useState(() => {
         return { page: Number.parseInt(searchParams.get('page')) || 1 };
@@ -32,15 +35,33 @@ function HomePage() {
     const [isLoading, setIsloading] = useState(false);
 
     // Search context
-    const { keyword } = useSearch();
+    const { keyword, setKeyword } = useSearch();
 
     const [category, setCategory] = useState(() => {
-        return searchParams.get('category') || '';
+        return searchParams.get('category') || 'all';
     });
 
     const [sort, setSort] = useState(() => {
         return searchParams.get('sort_by') || 'date';
     });
+
+    // useEffect(() => {
+    //     console.log('init load');
+    //     console.log(searchParams.get('keyword'));
+    //     setKeyword(searchParams.get('keyword') || '');
+    //     setCategory(searchParams.get('category') || 'all');
+    //     setSort(searchParams.get('sort_by') || 'date');
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+
+    useEffect(() => {
+        // if (!location.state?.from?.pathname.includes('recipes/detail/')) {
+        setCategory(searchParams.get('category') || 'all');
+        setSort(searchParams.get('sort_by') || 'date');
+        setKeyword(searchParams.get('keyword') || '');
+        // }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [_homeReload.reloadHome]);
 
     useEffect(() => {
         // setIsloading(true);
@@ -67,30 +88,30 @@ function HomePage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [keyword, category]);
 
-    useEffect(() => {
+    async function loadRecipe() {
         setIsloading(true);
-        axios
-            .get(
-                `recipes?category=${category}&page=${page.page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
-                {
-                    headers: {
-                        Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
-                    },
+        const response = await axios.get(
+            `recipes?category=${category}&page=${page.page}&per_page=${per_page}&sort_by=${sort}&keyword=${keyword}`,
+            {
+                headers: {
+                    Authorization: auth?.token === 'EXPIRED' ? null : auth?.token,
                 },
-            )
-            .then((response) => {
-                const data = response.data;
-                setPage((prev) => {
-                    prev.page = data.page;
-                    return prev;
-                });
-                setTotalPage(data.total_page);
-                setRecipeList(data.data);
-            })
-            .catch((err) => {
-                // console.log(err);
-            });
+            },
+        );
+
+        const data = response.data;
+        setPage((prev) => {
+            prev.page = data.page;
+            return prev;
+        });
+
+        setTotalPage(data.total_page);
+        setRecipeList(data.data);
         setIsloading(false);
+    }
+
+    useEffect(() => {
+        loadRecipe();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, sort]);
 
@@ -222,6 +243,7 @@ function HomePage() {
                         <select
                             onChange={handleChangeCategory}
                             className={cx('filter-select')}
+                            value={category}
                             id="category"
                         >
                             <option value="all">Tất cả</option>
@@ -240,6 +262,7 @@ function HomePage() {
 
                         <select
                             onChange={handleChangeSort}
+                            value={sort}
                             className={cx('filter-select')}
                             id="sort-food"
                         >
@@ -253,7 +276,18 @@ function HomePage() {
             <div>
                 <Row>
                     {isLoading ? (
-                        <Spinner animation="grow" variant="success" />
+                        <Col col={12} className="text-center">
+                            <div className="mt-5">
+                                <Spinner
+                                    style={{ width: '30px', height: '30px' }}
+                                    animation="border"
+                                    role="status"
+                                    variant="primary"
+                                >
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>
+                            </div>
+                        </Col>
                     ) : recipeList.length > 0 ? (
                         recipeList.map((recipe, index) => (
                             <Col xs={6} md={4} lg={3} key={recipe.recipeid}>
@@ -264,10 +298,12 @@ function HomePage() {
                                 />
                             </Col>
                         ))
-                    ) : (
+                    ) : !isLoading ? (
                         <Col col={12} className="text-center">
                             <p className={cx('notfound-message')}>Không tìm thấy công thức nào!</p>
                         </Col>
+                    ) : (
+                        false
                     )}
                 </Row>
 
