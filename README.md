@@ -9,4 +9,4 @@
 
 ## Backend source
 
--   You can find backend source of this project here: _[noshnovel-fe](https://github.com/tmplam/share-recipes-be/ 'Recipes Sharing Backend')_
+-   You can find backend source of this project here: _[share-recipes-be](https://github.com/tmplam/share-recipes-be/ 'Recipes Sharing Backend')_
